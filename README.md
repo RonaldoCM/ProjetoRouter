@@ -4,7 +4,7 @@
  Esse projeto utiliza:
 
  Banco de dados - MySQL.
- BackEnd: API RESTful em C#.
+ BackEnd: API RESTful em C# (ASP Net Core).
  FrontEnd: Framework Flutter (dart).
 
 O uso dessas tecnologias e frameworks são em caráter de estudos para aprendizado de conceitos de desenvolvimento de APIs RESTful e a utilização da abordagem Database First.
