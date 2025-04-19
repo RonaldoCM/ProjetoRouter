@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "Tkpv8xKtndTPkQIR5FFC7W2YLyqKVQhR9aqqZs2Q7YY=",
+  "Source": "WebApiRouter",
+  "BasePath": "_content/WebApiRouter",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
