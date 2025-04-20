@@ -22,7 +22,7 @@ class RotaScreenState extends State<RotaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Rotas')),
-      body: FutureBuilder<List<Rota>>(
+    /*  body: FutureBuilder<List<Rota>>(
         future: futureRotas,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -43,7 +43,7 @@ class RotaScreenState extends State<RotaScreen> {
           }
           return Center(child: CircularProgressIndicator());
         },
-      ),
+      ), */
     );
   }
 }
