@@ -8,19 +8,19 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema routerdatabase
+-- Schema routerdb
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema routerdatabase
+-- Schema routerdb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `routerdatabase` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `routerdatabase` ;
+CREATE SCHEMA IF NOT EXISTS `routerdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `routerdb` ;
 
 -- -----------------------------------------------------
--- Table `routerdatabase`.`rta_endereco`
+-- Table `routerdb`.`rta_endereco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_endereco` (
+CREATE TABLE IF NOT EXISTS `routerdb`.`rta_endereco` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `LOGRADOURO` VARCHAR(45) NOT NULL,
   `NUMERO` VARCHAR(45) NOT NULL,
@@ -36,9 +36,9 @@ COMMENT = 'CADASTRO DOS ENDEREÇOS';
 
 
 -- -----------------------------------------------------
--- Table `routerdatabase`.`rta_tipopessoa`
+-- Table `routerdb`.`rta_tipopessoa`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_tipopessoa` (
+CREATE TABLE IF NOT EXISTS `routerdb`.`rta_tipopessoa` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `DESCRICAO` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`ID`))
@@ -49,20 +49,21 @@ COMMENT = 'CADASTRO DOS TIPOS DE PESSOA';
 
 
 -- -----------------------------------------------------
--- Table `routerdatabase`.`rta_pessoafisica`
+-- Table `routerdb`.`rta_pessoafisica`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_pessoafisica` (
+CREATE TABLE IF NOT EXISTS `routerdb`.`rta_pessoafisica` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `CODIGO` CHAR(5) NOT NULL,
   `NOME` VARCHAR(100) NOT NULL,
   `CPF` CHAR(11) NULL DEFAULT NULL,
   `ATIVO` TINYINT NOT NULL DEFAULT '1',
   `IDTIPOPESSOA` INT NOT NULL,
+  `TELEFONE` CHAR(12) NULL,
   PRIMARY KEY (`ID`, `IDTIPOPESSOA`),
   INDEX `fk_rta_pessoafisica_rta_tipopessoa1_idx` (`IDTIPOPESSOA` ASC) VISIBLE,
   CONSTRAINT `fk_rta_pessoafisica_rta_tipopessoa1`
     FOREIGN KEY (`IDTIPOPESSOA`)
-    REFERENCES `routerdatabase`.`rta_tipopessoa` (`ID`)
+    REFERENCES `routerdb`.`rta_tipopessoa` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -72,9 +73,9 @@ COMMENT = 'CADASTRO DE PESSOAS FÍSICAS';
 
 
 -- -----------------------------------------------------
--- Table `routerdatabase`.`rta_pessoajuridica`
+-- Table `routerdb`.`rta_pessoajuridica`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_pessoajuridica` (
+CREATE TABLE IF NOT EXISTS `routerdb`.`rta_pessoajuridica` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `CODIGO` CHAR(5) NOT NULL,
   `NOME` VARCHAR(200) NOT NULL,
@@ -82,17 +83,18 @@ CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_pessoajuridica` (
   `ATIVO` TINYINT NOT NULL DEFAULT '1',
   `IDTIPOPESSOA` INT NOT NULL,
   `IDENDERECO` INT NOT NULL,
+  `TELEFONE` CHAR(12) NULL,
   PRIMARY KEY (`ID`, `IDTIPOPESSOA`, `IDENDERECO`),
   INDEX `fk_rta_pessoajuridica_rta_tipopessoa1_idx` (`IDTIPOPESSOA` ASC) VISIBLE,
   INDEX `fk_rta_pessoajuridica_rta_endereco1_idx` (`IDENDERECO` ASC) VISIBLE,
   CONSTRAINT `fk_rta_pessoajuridica_rta_tipopessoa1`
     FOREIGN KEY (`IDTIPOPESSOA`)
-    REFERENCES `routerdatabase`.`rta_tipopessoa` (`ID`)
+    REFERENCES `routerdb`.`rta_tipopessoa` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_rta_pessoajuridica_rta_endereco1`
     FOREIGN KEY (`IDENDERECO`)
-    REFERENCES `routerdatabase`.`rta_endereco` (`ID`)
+    REFERENCES `routerdb`.`rta_endereco` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -102,9 +104,9 @@ COMMENT = 'CADASTRO DAS PESSOAS JURÍDICAS';
 
 
 -- -----------------------------------------------------
--- Table `routerdatabase`.`rta_situacao`
+-- Table `routerdb`.`rta_situacao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_situacao` (
+CREATE TABLE IF NOT EXISTS `routerdb`.`rta_situacao` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `NOME` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`ID`))
@@ -115,9 +117,9 @@ COMMENT = 'SITUAÇÃO DA ROTA';
 
 
 -- -----------------------------------------------------
--- Table `routerdatabase`.`rta_rota`
+-- Table `routerdb`.`rta_rota`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_rota` (
+CREATE TABLE IF NOT EXISTS `routerdb`.`rta_rota` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `CODIGO` VARCHAR(45) NOT NULL,
   `DATACRIACAO` DATETIME NOT NULL,
@@ -129,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_rota` (
   INDEX `fk_rta_rota_rta_situacao_idx` (`IDSITUACAO` ASC) VISIBLE,
   CONSTRAINT `fk_rta_rota_rta_situacao`
     FOREIGN KEY (`IDSITUACAO`)
-    REFERENCES `routerdatabase`.`rta_situacao` (`ID`)
+    REFERENCES `routerdb`.`rta_situacao` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -139,9 +141,9 @@ COMMENT = 'CADASTRO DAS ROTAS';
 
 
 -- -----------------------------------------------------
--- Table `routerdatabase`.`rta_pessoajuridica_pessoafisica`
+-- Table `routerdb`.`rta_pessoajuridica_pessoafisica`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_pessoajuridica_pessoafisica` (
+CREATE TABLE IF NOT EXISTS `routerdb`.`rta_pessoajuridica_pessoafisica` (
   `IDPJ` INT NOT NULL,
   `IDPF` INT NOT NULL,
   PRIMARY KEY (`IDPJ`, `IDPF`),
@@ -149,12 +151,12 @@ CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_pessoajuridica_pessoafisica` (
   INDEX `fk_rta_pessoajuridica_has_rta_pessoafisica_rta_pessoajuridi_idx` (`IDPJ` ASC) VISIBLE,
   CONSTRAINT `fk_rta_pessoajuridica_has_rta_pessoafisica_rta_pessoajuridica1`
     FOREIGN KEY (`IDPJ`)
-    REFERENCES `routerdatabase`.`rta_pessoajuridica` (`ID`)
+    REFERENCES `routerdb`.`rta_pessoajuridica` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_rta_pessoajuridica_has_rta_pessoafisica_rta_pessoafisica1`
     FOREIGN KEY (`IDPF`)
-    REFERENCES `routerdatabase`.`rta_pessoafisica` (`ID`)
+    REFERENCES `routerdb`.`rta_pessoafisica` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -163,9 +165,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `routerdatabase`.`rta_rota_pessoajuridica`
+-- Table `routerdb`.`rta_rota_pessoajuridica`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_rota_pessoajuridica` (
+CREATE TABLE IF NOT EXISTS `routerdb`.`rta_rota_pessoajuridica` (
   `IDROTA` INT NOT NULL,
   `IDPESSOAJURIDICA` INT NOT NULL,
   PRIMARY KEY (`IDROTA`, `IDPESSOAJURIDICA`),
@@ -173,12 +175,12 @@ CREATE TABLE IF NOT EXISTS `routerdatabase`.`rta_rota_pessoajuridica` (
   INDEX `fk_rta_rota_has_rta_pessoajuridica_rta_rota1_idx` (`IDROTA` ASC) VISIBLE,
   CONSTRAINT `fk_rta_rota_has_rta_pessoajuridica_rta_rota1`
     FOREIGN KEY (`IDROTA`)
-    REFERENCES `routerdatabase`.`rta_rota` (`ID`)
+    REFERENCES `routerdb`.`rta_rota` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_rta_rota_has_rta_pessoajuridica_rta_pessoajuridica1`
     FOREIGN KEY (`IDPESSOAJURIDICA`)
-    REFERENCES `routerdatabase`.`rta_pessoajuridica` (`ID`)
+    REFERENCES `routerdb`.`rta_pessoajuridica` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
