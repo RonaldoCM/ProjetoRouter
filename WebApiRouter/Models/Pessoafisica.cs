@@ -1,5 +1,11 @@
-﻿namespace WebApiRouter.Models;
+﻿using System;
+using System.Collections.Generic;
 
+namespace WebApiRouter.Models;
+
+/// <summary>
+/// CADASTRO DE PESSOAS FÍSICAS
+/// </summary>
 public partial class Pessoafisica
 {
     public int Id { get; set; }
@@ -12,7 +18,13 @@ public partial class Pessoafisica
 
     public sbyte Ativo { get; set; }
 
-    public int Idtipopessoa { get; set; }
+    public string? Telefone { get; set; }
 
-    public virtual Tipopessoa IdtipopessoaNavigation { get; set; } = null!;
+    public string? Senha { get; set; }
+
+    public int TipopessoaId { get; set; }
+
+    public virtual Tipopessoa Tipopessoa { get; set; } = null!;
+
+    public virtual ICollection<Pessoajuridica> Pessoajuridicas { get; set; } = new List<Pessoajuridica>();
 }

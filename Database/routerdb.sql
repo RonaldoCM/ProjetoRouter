@@ -7,6 +7,18 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema routerdb
 -- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema routerdb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `routerdb` DEFAULT CHARACTER SET utf8 ;
+-- -----------------------------------------------------
+-- Schema routerdb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema routerdb
+-- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `routerdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
 USE `routerdb` ;
 
@@ -28,6 +40,43 @@ CREATE TABLE IF NOT EXISTS `routerdb`.`FINALIDADE` (
   `DESCRICAO` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`ID`))
 ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `routerdb`.`SITUACAO_ROTA`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `routerdb`.`SITUACAO_ROTA` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `NOME` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci
+COMMENT = 'SITUAÇÃO DA ROTA';
+
+
+-- -----------------------------------------------------
+-- Table `routerdb`.`ROTA`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `routerdb`.`ROTA` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `CODIGO` VARCHAR(45) NOT NULL,
+  `DATACRIACAO` DATETIME NOT NULL,
+  `DATAFECHAMENTO` DATETIME NULL DEFAULT NULL,
+  `OBSERVACAO` VARCHAR(200) NULL DEFAULT NULL,
+  `ATIVO` TINYINT NOT NULL DEFAULT '1' COMMENT 'COLUNA PARA VALIDAR SE A ROTA ESTÁ ATIVA OU NÃO.',
+  `SITUACAO_ROTA_ID` INT NOT NULL,
+  PRIMARY KEY (`ID`),
+  INDEX `fk_ROTA_SITUACAO_ROTA1_idx` (`SITUACAO_ROTA_ID` ASC) VISIBLE,
+  CONSTRAINT `fk_ROTA_SITUACAO_ROTA1`
+    FOREIGN KEY (`SITUACAO_ROTA_ID`)
+    REFERENCES `routerdb`.`SITUACAO_ROTA` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci
+COMMENT = 'CADASTRO DAS ROTAS';
 
 
 -- -----------------------------------------------------
@@ -59,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `routerdb`.`PESSOAJURIDICA` (
   `ATIVO` TINYINT NOT NULL DEFAULT '1',
   `IDENDERECO` INT NOT NULL,
   `TELEFONE` CHAR(12) NULL,
-  PRIMARY KEY (`ID`, `IDENDERECO`),
+  PRIMARY KEY (`ID`),
   INDEX `fk_rta_pessoajuridica_rta_endereco1_idx` (`IDENDERECO` ASC) VISIBLE,
   CONSTRAINT `fk_rta_pessoajuridica_rta_endereco1`
     FOREIGN KEY (`IDENDERECO`)
@@ -73,43 +122,6 @@ COMMENT = 'CADASTRO DAS PESSOAS JURÍDICAS';
 
 
 -- -----------------------------------------------------
--- Table `routerdb`.`SITUACAO_ROTA`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `routerdb`.`SITUACAO_ROTA` (
-  `ID` INT NOT NULL AUTO_INCREMENT,
-  `NOME` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`ID`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci
-COMMENT = 'SITUAÇÃO DA ROTA';
-
-
--- -----------------------------------------------------
--- Table `routerdb`.`ROTA`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `routerdb`.`ROTA` (
-  `ID` INT NOT NULL AUTO_INCREMENT,
-  `CODIGO` VARCHAR(45) NOT NULL,
-  `DATACRIACAO` DATETIME NOT NULL,
-  `DATAFECHAMENTO` DATETIME NULL DEFAULT NULL,
-  `OBSERVACAO` VARCHAR(200) NULL DEFAULT NULL,
-  `ATIVO` TINYINT NOT NULL DEFAULT '1' COMMENT 'COLUNA PARA VALIDAR SE A ROTA ESTÁ ATIVA OU NÃO.',
-  `SITUACAO_ROTA_ID` INT NOT NULL,
-  PRIMARY KEY (`ID`, `SITUACAO_ROTA_ID`),
-  INDEX `fk_ROTA_SITUACAO_ROTA1_idx` (`SITUACAO_ROTA_ID` ASC) VISIBLE,
-  CONSTRAINT `fk_ROTA_SITUACAO_ROTA1`
-    FOREIGN KEY (`SITUACAO_ROTA_ID`)
-    REFERENCES `routerdb`.`SITUACAO_ROTA` (`ID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci
-COMMENT = 'CADASTRO DAS ROTAS';
-
-
--- -----------------------------------------------------
 -- Table `routerdb`.`SERVICO`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `routerdb`.`SERVICO` (
@@ -118,13 +130,13 @@ CREATE TABLE IF NOT EXISTS `routerdb`.`SERVICO` (
   `DATAFECHAMENTO` DATETIME NULL,
   `SITUACAO_SERVICO_ID` INT NOT NULL,
   `FINALIDADE_ID` INT NOT NULL,
-  `PESSOAJURIDICA_ID` INT NOT NULL,
   `ROTA_ID` INT NOT NULL,
-  PRIMARY KEY (`ID`, `SITUACAO_SERVICO_ID`, `FINALIDADE_ID`, `PESSOAJURIDICA_ID`, `ROTA_ID`),
+  `PESSOAJURIDICA_ID` INT NOT NULL,
+  PRIMARY KEY (`ID`),
   INDEX `fk_SERVICO_SITUACAO_SERVICO_idx` (`SITUACAO_SERVICO_ID` ASC) VISIBLE,
   INDEX `fk_SERVICO_FINALIDADE1_idx` (`FINALIDADE_ID` ASC) VISIBLE,
-  INDEX `fk_SERVICO_PESSOAJURIDICA1_idx` (`PESSOAJURIDICA_ID` ASC) VISIBLE,
   INDEX `fk_SERVICO_ROTA1_idx` (`ROTA_ID` ASC) VISIBLE,
+  INDEX `fk_SERVICO_PESSOAJURIDICA1_idx` (`PESSOAJURIDICA_ID` ASC) VISIBLE,
   CONSTRAINT `fk_SERVICO_SITUACAO_SERVICO`
     FOREIGN KEY (`SITUACAO_SERVICO_ID`)
     REFERENCES `routerdb`.`SITUACAO_SERVICO` (`ID`)
@@ -135,14 +147,14 @@ CREATE TABLE IF NOT EXISTS `routerdb`.`SERVICO` (
     REFERENCES `routerdb`.`FINALIDADE` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_SERVICO_PESSOAJURIDICA1`
-    FOREIGN KEY (`PESSOAJURIDICA_ID`)
-    REFERENCES `routerdb`.`PESSOAJURIDICA` (`ID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_SERVICO_ROTA1`
     FOREIGN KEY (`ROTA_ID`)
     REFERENCES `routerdb`.`ROTA` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_SERVICO_PESSOAJURIDICA1`
+    FOREIGN KEY (`PESSOAJURIDICA_ID`)
+    REFERENCES `routerdb`.`PESSOAJURIDICA` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -174,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `routerdb`.`PESSOAFISICA` (
   `TELEFONE` CHAR(12) NULL,
   `SENHA` CHAR(4) NULL,
   `TIPOPESSOA_ID` INT NOT NULL,
-  PRIMARY KEY (`ID`, `TIPOPESSOA_ID`),
+  PRIMARY KEY (`ID`),
   INDEX `fk_PESSOAFISICA_TIPOPESSOA1_idx` (`TIPOPESSOA_ID` ASC) VISIBLE,
   CONSTRAINT `fk_PESSOAFISICA_TIPOPESSOA1`
     FOREIGN KEY (`TIPOPESSOA_ID`)
@@ -191,18 +203,18 @@ COMMENT = 'CADASTRO DE PESSOAS FÍSICAS';
 -- Table `routerdb`.`PESSOAJURIDICA_PESSOAFISICA`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `routerdb`.`PESSOAJURIDICA_PESSOAFISICA` (
-  `IDPJ` INT NOT NULL,
-  `IDPF` INT NOT NULL,
-  PRIMARY KEY (`IDPJ`, `IDPF`),
-  INDEX `fk_rta_pessoajuridica_has_rta_pessoafisica_rta_pessoafisica_idx` (`IDPF` ASC) VISIBLE,
-  INDEX `fk_rta_pessoajuridica_has_rta_pessoafisica_rta_pessoajuridi_idx` (`IDPJ` ASC) VISIBLE,
-  CONSTRAINT `fk_rta_pessoajuridica_has_rta_pessoafisica_rta_pessoajuridica1`
-    FOREIGN KEY (`IDPJ`)
+  `PESSOAJURIDICA_ID` INT NOT NULL,
+  `PESSOAFISICA_ID` INT NOT NULL,
+  PRIMARY KEY (`PESSOAJURIDICA_ID`, `PESSOAFISICA_ID`),
+  INDEX `fk_PESSOAJURIDICA_has_PESSOAFISICA_PESSOAFISICA1_idx` (`PESSOAFISICA_ID` ASC) VISIBLE,
+  INDEX `fk_PESSOAJURIDICA_has_PESSOAFISICA_PESSOAJURIDICA1_idx` (`PESSOAJURIDICA_ID` ASC) VISIBLE,
+  CONSTRAINT `fk_PESSOAJURIDICA_has_PESSOAFISICA_PESSOAJURIDICA1`
+    FOREIGN KEY (`PESSOAJURIDICA_ID`)
     REFERENCES `routerdb`.`PESSOAJURIDICA` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_rta_pessoajuridica_has_rta_pessoafisica_rta_pessoafisica1`
-    FOREIGN KEY (`IDPF`)
+  CONSTRAINT `fk_PESSOAJURIDICA_has_PESSOAFISICA_PESSOAFISICA1`
+    FOREIGN KEY (`PESSOAFISICA_ID`)
     REFERENCES `routerdb`.`PESSOAFISICA` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)

@@ -14,6 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer(); // Necessário para Swagger
 builder.Services.AddSwaggerGen();           // Gera a documentação Swagger
 
+
 builder.Services.AddDbContext<RouterDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));

@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiRouter.Data;
@@ -17,15 +18,15 @@ namespace WebApiRouter.Controllers
         }
        
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Situacao>>> GetSituacoes()
+        public async Task<ActionResult<IEnumerable<SituacaoRota>>> GetSituacoes()
         {
-            return await _context.Situacoes.ToListAsync();
+            return await _context.SituacaoRota.ToListAsync();
         }
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<Situacao>> GetSituacao(int id)
+        public async Task<ActionResult<SituacaoRota>> GetSituacao(int id)
         {
-            var situacao = await _context.Situacoes.FindAsync(id);
+            var situacao = await _context.SituacaoRota.FindAsync(id);
 
             if (situacao == null)
             {

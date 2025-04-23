@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using WebApiRouter.Models;
 
 namespace WebApiRouter.Data;
@@ -16,17 +18,19 @@ public partial class RouterDbContext : DbContext
 
     public virtual DbSet<Endereco> Enderecos { get; set; }
 
+    public virtual DbSet<Finalidade> Finalidades { get; set; }
+
     public virtual DbSet<Pessoafisica> Pessoafisicas { get; set; }
 
     public virtual DbSet<Pessoajuridica> Pessoajuridicas { get; set; }
 
-    public virtual DbSet<PessoajuridicaPessoafisica> PessoajuridicaPessoafisicas { get; set; }
-
-    public virtual DbSet<RotaPessoajuridica> RotaPessoajuridicas { get; set; }
-
     public virtual DbSet<Rota> Rota { get; set; }
 
-    public virtual DbSet<Situacao> Situacoes { get; set; }
+    public virtual DbSet<Servico> Servicos { get; set; }
+
+    public virtual DbSet<SituacaoRota> SituacaoRota { get; set; }
+
+    public virtual DbSet<SituacaoServico> SituacaoServicos { get; set; }
 
     public virtual DbSet<Tipopessoa> Tipopessoas { get; set; }
 
@@ -35,19 +39,22 @@ public partial class RouterDbContext : DbContext
         
     }
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        //=> optionsBuilder.UseMySql("server=127.0.0.1;user=root;password=1964;database=routerdatabase", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.37-mysql"));
+//        => optionsBuilder.UseMySql("server=127.0.0.1;user=root;password=1964;database=routerdb", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.37-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
-            .UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
+            .UseCollation("utf8mb3_general_ci")
+            .HasCharSet("utf8mb3");
 
         modelBuilder.Entity<Endereco>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("rta_endereco", tb => tb.HasComment("CADASTRO DOS ENDEREÇOS"));
+            entity
+                .ToTable("endereco", tb => tb.HasComment("CADASTRO DOS ENDEREÇOS"))
+                .HasCharSet("utf8mb4")
+                .UseCollation("utf8mb4_0900_ai_ci");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Ativo)
@@ -70,20 +77,30 @@ public partial class RouterDbContext : DbContext
                 .HasColumnName("NUMERO");
         });
 
+        modelBuilder.Entity<Finalidade>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("finalidade");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Descricao)
+                .HasMaxLength(45)
+                .HasColumnName("DESCRICAO");
+        });
+
         modelBuilder.Entity<Pessoafisica>(entity =>
         {
-            entity.HasKey(e => new { e.Id, e.Idtipopessoa })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("rta_pessoafisica", tb => tb.HasComment("CADASTRO DE PESSOAS FÍSICAS"));
+            entity
+                .ToTable("pessoafisica", tb => tb.HasComment("CADASTRO DE PESSOAS FÍSICAS"))
+                .HasCharSet("utf8mb4")
+                .UseCollation("utf8mb4_0900_ai_ci");
 
-            entity.HasIndex(e => e.Idtipopessoa, "fk_rta_pessoafisica_rta_tipopessoa1_idx");
+            entity.HasIndex(e => e.TipopessoaId, "fk_PESSOAFISICA_TIPOPESSOA1_idx");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("ID");
-            entity.Property(e => e.Idtipopessoa).HasColumnName("IDTIPOPESSOA");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Ativo)
                 .HasDefaultValueSql("'1'")
                 .HasColumnName("ATIVO");
@@ -98,30 +115,34 @@ public partial class RouterDbContext : DbContext
             entity.Property(e => e.Nome)
                 .HasMaxLength(100)
                 .HasColumnName("NOME");
+            entity.Property(e => e.Senha)
+                .HasMaxLength(4)
+                .IsFixedLength()
+                .HasColumnName("SENHA");
+            entity.Property(e => e.Telefone)
+                .HasMaxLength(12)
+                .IsFixedLength()
+                .HasColumnName("TELEFONE");
+            entity.Property(e => e.TipopessoaId).HasColumnName("TIPOPESSOA_ID");
 
-            entity.HasOne(d => d.IdtipopessoaNavigation).WithMany(p => p.Pessoafisicas)
-                .HasForeignKey(d => d.Idtipopessoa)
+            entity.HasOne(d => d.Tipopessoa).WithMany(p => p.Pessoafisicas)
+                .HasForeignKey(d => d.TipopessoaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_rta_pessoafisica_rta_tipopessoa1");
+                .HasConstraintName("fk_PESSOAFISICA_TIPOPESSOA1");
         });
 
         modelBuilder.Entity<Pessoajuridica>(entity =>
         {
-            entity.HasKey(e => new { e.Id, e.Idtipopessoa, e.Idendereco })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("rta_pessoajuridica", tb => tb.HasComment("CADASTRO DAS PESSOAS JURÍDICAS"));
+            entity
+                .ToTable("pessoajuridica", tb => tb.HasComment("CADASTRO DAS PESSOAS JURÍDICAS"))
+                .HasCharSet("utf8mb4")
+                .UseCollation("utf8mb4_0900_ai_ci");
 
             entity.HasIndex(e => e.Idendereco, "fk_rta_pessoajuridica_rta_endereco1_idx");
 
-            entity.HasIndex(e => e.Idtipopessoa, "fk_rta_pessoajuridica_rta_tipopessoa1_idx");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("ID");
-            entity.Property(e => e.Idtipopessoa).HasColumnName("IDTIPOPESSOA");
-            entity.Property(e => e.Idendereco).HasColumnName("IDENDERECO");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Ativo)
                 .HasDefaultValueSql("'1'")
                 .HasColumnName("ATIVO");
@@ -133,67 +154,59 @@ public partial class RouterDbContext : DbContext
                 .HasMaxLength(5)
                 .IsFixedLength()
                 .HasColumnName("CODIGO");
+            entity.Property(e => e.Idendereco).HasColumnName("IDENDERECO");
             entity.Property(e => e.Nome)
                 .HasMaxLength(200)
                 .HasColumnName("NOME");
+            entity.Property(e => e.Telefone)
+                .HasMaxLength(12)
+                .IsFixedLength()
+                .HasColumnName("TELEFONE");
 
             entity.HasOne(d => d.IdenderecoNavigation).WithMany(p => p.Pessoajuridicas)
                 .HasForeignKey(d => d.Idendereco)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_rta_pessoajuridica_rta_endereco1");
 
-            entity.HasOne(d => d.IdtipopessoaNavigation).WithMany(p => p.Pessoajuridicas)
-                .HasForeignKey(d => d.Idtipopessoa)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_rta_pessoajuridica_rta_tipopessoa1");
-        });
-
-        modelBuilder.Entity<PessoajuridicaPessoafisica>(entity =>
-        {
-            entity.HasKey(e => new { e.Idpj, e.Idpf })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-
-            entity.ToTable("rta_pessoajuridica_pessoafisica");
-
-            entity.HasIndex(e => e.Idpf, "fk_rta_pessoajuridica_has_rta_pessoafisica_rta_pessoafisica_idx");
-
-            entity.HasIndex(e => e.Idpj, "fk_rta_pessoajuridica_has_rta_pessoafisica_rta_pessoajuridi_idx");
-
-            entity.Property(e => e.Idpj).HasColumnName("IDPJ");
-            entity.Property(e => e.Idpf).HasColumnName("IDPF");
-        });
-
-        modelBuilder.Entity<RotaPessoajuridica>(entity =>
-        {
-            entity.HasKey(e => new { e.Idrota, e.Idpessoajuridica })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-
-            entity.ToTable("rta_rota_pessoajuridica");
-
-            entity.HasIndex(e => e.Idpessoajuridica, "fk_rta_rota_has_rta_pessoajuridica_rta_pessoajuridica1_idx");
-
-            entity.HasIndex(e => e.Idrota, "fk_rta_rota_has_rta_pessoajuridica_rta_rota1_idx");
-
-            entity.Property(e => e.Idrota).HasColumnName("IDROTA");
-            entity.Property(e => e.Idpessoajuridica).HasColumnName("IDPESSOAJURIDICA");
+            entity.HasMany(d => d.Pessoafisicas).WithMany(p => p.Pessoajuridicas)
+                .UsingEntity<Dictionary<string, object>>(
+                    "PessoajuridicaPessoafisica",
+                    r => r.HasOne<Pessoafisica>().WithMany()
+                        .HasForeignKey("PessoafisicaId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("fk_PESSOAJURIDICA_has_PESSOAFISICA_PESSOAFISICA1"),
+                    l => l.HasOne<Pessoajuridica>().WithMany()
+                        .HasForeignKey("PessoajuridicaId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("fk_PESSOAJURIDICA_has_PESSOAFISICA_PESSOAJURIDICA1"),
+                    j =>
+                    {
+                        j.HasKey("PessoajuridicaId", "PessoafisicaId")
+                            .HasName("PRIMARY")
+                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                        j
+                            .ToTable("pessoajuridica_pessoafisica")
+                            .HasCharSet("utf8mb4")
+                            .UseCollation("utf8mb4_0900_ai_ci");
+                        j.HasIndex(new[] { "PessoafisicaId" }, "fk_PESSOAJURIDICA_has_PESSOAFISICA_PESSOAFISICA1_idx");
+                        j.HasIndex(new[] { "PessoajuridicaId" }, "fk_PESSOAJURIDICA_has_PESSOAFISICA_PESSOAJURIDICA1_idx");
+                        j.IndexerProperty<int>("PessoajuridicaId").HasColumnName("PESSOAJURIDICA_ID");
+                        j.IndexerProperty<int>("PessoafisicaId").HasColumnName("PESSOAFISICA_ID");
+                    });
         });
 
         modelBuilder.Entity<Rota>(entity =>
         {
-            entity.HasKey(e => new { e.Id, e.Idsituacao })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("rta_rota", tb => tb.HasComment("CADASTRO DAS ROTAS"));
+            entity
+                .ToTable("rota", tb => tb.HasComment("CADASTRO DAS ROTAS"))
+                .HasCharSet("utf8mb4")
+                .UseCollation("utf8mb4_0900_ai_ci");
 
-            entity.HasIndex(e => e.Idsituacao, "fk_rta_rota_rta_situacao_idx");
+            entity.HasIndex(e => e.SituacaoRotaId, "fk_ROTA_SITUACAO_ROTA1_idx");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("ID");
-            entity.Property(e => e.Idsituacao).HasColumnName("IDSITUACAO");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Ativo)
                 .HasDefaultValueSql("'1'")
                 .HasComment("COLUNA PARA VALIDAR SE A ROTA ESTÁ ATIVA OU NÃO.")
@@ -210,18 +223,69 @@ public partial class RouterDbContext : DbContext
             entity.Property(e => e.Observacao)
                 .HasMaxLength(200)
                 .HasColumnName("OBSERVACAO");
+            entity.Property(e => e.SituacaoRotaId).HasColumnName("SITUACAO_ROTA_ID");
 
-            entity.HasOne(d => d.IdsituacaoNavigation).WithMany(p => p.Rota)
-                .HasForeignKey(d => d.Idsituacao)
+            entity.HasOne(d => d.SituacaoRota).WithMany(p => p.Rota)
+                .HasForeignKey(d => d.SituacaoRotaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_rta_rota_rta_situacao");
+                .HasConstraintName("fk_ROTA_SITUACAO_ROTA1");
         });
 
-        modelBuilder.Entity<Situacao>(entity =>
+        modelBuilder.Entity<Servico>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("rta_situacao", tb => tb.HasComment("SITUAÇÃO DA ROTA"));
+            entity.ToTable("servico");
+
+            entity.HasIndex(e => e.FinalidadeId, "fk_SERVICO_FINALIDADE1_idx");
+
+            entity.HasIndex(e => e.PessoajuridicaId, "fk_SERVICO_PESSOAJURIDICA1_idx");
+
+            entity.HasIndex(e => e.RotaId, "fk_SERVICO_ROTA1_idx");
+
+            entity.HasIndex(e => e.SituacaoServicoId, "fk_SERVICO_SITUACAO_SERVICO_idx");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Datacriacao)
+                .HasColumnType("datetime")
+                .HasColumnName("DATACRIACAO");
+            entity.Property(e => e.Datafechamento)
+                .HasColumnType("datetime")
+                .HasColumnName("DATAFECHAMENTO");
+            entity.Property(e => e.FinalidadeId).HasColumnName("FINALIDADE_ID");
+            entity.Property(e => e.PessoajuridicaId).HasColumnName("PESSOAJURIDICA_ID");
+            entity.Property(e => e.RotaId).HasColumnName("ROTA_ID");
+            entity.Property(e => e.SituacaoServicoId).HasColumnName("SITUACAO_SERVICO_ID");
+
+            entity.HasOne(d => d.Finalidade).WithMany(p => p.Servicos)
+                .HasForeignKey(d => d.FinalidadeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_SERVICO_FINALIDADE1");
+
+            entity.HasOne(d => d.Pessoajuridica).WithMany(p => p.Servicos)
+                .HasForeignKey(d => d.PessoajuridicaId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_SERVICO_PESSOAJURIDICA1");
+
+            entity.HasOne(d => d.Rota).WithMany(p => p.Servicos)
+                .HasForeignKey(d => d.RotaId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_SERVICO_ROTA1");
+
+            entity.HasOne(d => d.SituacaoServico).WithMany(p => p.Servicos)
+                .HasForeignKey(d => d.SituacaoServicoId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_SERVICO_SITUACAO_SERVICO");
+        });
+
+        modelBuilder.Entity<SituacaoRota>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity
+                .ToTable("situacao_rota", tb => tb.HasComment("SITUAÇÃO DA ROTA"))
+                .HasCharSet("utf8mb4")
+                .UseCollation("utf8mb4_0900_ai_ci");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Nome)
@@ -229,11 +293,26 @@ public partial class RouterDbContext : DbContext
                 .HasColumnName("NOME");
         });
 
+        modelBuilder.Entity<SituacaoServico>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("situacao_servico");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Descricao)
+                .HasMaxLength(45)
+                .HasColumnName("DESCRICAO");
+        });
+
         modelBuilder.Entity<Tipopessoa>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("rta_tipopessoa", tb => tb.HasComment("CADASTRO DOS TIPOS DE PESSOA"));
+            entity
+                .ToTable("tipopessoa", tb => tb.HasComment("CADASTRO DOS TIPOS DE PESSOA"))
+                .HasCharSet("utf8mb4")
+                .UseCollation("utf8mb4_0900_ai_ci");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Descricao)

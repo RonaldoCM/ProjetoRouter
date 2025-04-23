@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiRouter.Data;
@@ -112,7 +113,7 @@ namespace WebApiRouter.Controllers
                 Observacao = rotaDTO.Observacao,
                 Datacriacao = DateTime.UtcNow,
                 Ativo = 1,
-                Idsituacao = 1, // Situação "Criada"
+                SituacaoRotaId = 1, // Situaï¿½ï¿½o "Criada"
                 Codigo = await GerarCodigoAsync()
             };
 
