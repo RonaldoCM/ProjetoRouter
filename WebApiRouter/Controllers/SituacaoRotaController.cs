@@ -8,11 +8,11 @@ namespace WebApiRouter.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SituacaoController : ControllerBase
+    public class SituacaoRotaController : ControllerBase
     {
         private readonly RouterDbContext _context;
 
-        public SituacaoController(RouterDbContext context)
+        public SituacaoRotaController(RouterDbContext context)
         {
             _context = context;
         }

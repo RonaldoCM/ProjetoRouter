@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WebApiRouter.Models;
+﻿namespace WebApiRouter.Models;
 
 public partial class Servico
 {

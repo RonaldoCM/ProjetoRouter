@@ -45,3 +45,4 @@ G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\obj\Debug\net9.0\refint\WebApiRo
 G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\obj\Debug\net9.0\WebApiRouter.pdb
 G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\obj\Debug\net9.0\WebApiRouter.genruntimeconfig.cache
 G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\obj\Debug\net9.0\ref\WebApiRouter.dll
+G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace WebApiRouter.Models;
 
-namespace WebApiRouter.Models;
-
-/// <summary>
-/// CADASTRO DOS TIPOS DE PESSOA
-/// </summary>
 public partial class Tipopessoa
 {
     public int Id { get; set; }

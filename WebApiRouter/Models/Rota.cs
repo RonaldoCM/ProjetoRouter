@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace WebApiRouter.Models;
 
-namespace WebApiRouter.Models;
-
-/// <summary>
-/// CADASTRO DAS ROTAS
-/// </summary>
 public partial class Rota
 {
     public int Id { get; set; }
@@ -18,9 +12,6 @@ public partial class Rota
 
     public string? Observacao { get; set; }
 
-    /// <summary>
-    /// COLUNA PARA VALIDAR SE A ROTA ESTÁ ATIVA OU NÃO.
-    /// </summary>
     public sbyte Ativo { get; set; }
 
     public int SituacaoRotaId { get; set; }

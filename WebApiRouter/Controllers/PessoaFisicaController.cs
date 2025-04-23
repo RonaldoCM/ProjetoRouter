@@ -73,7 +73,7 @@ namespace WebApiRouter.Controllers
                 Nome = pessoaDTO.Nome,
                 Cpf = pessoaDTO.Cpf,
                 Ativo = 1,
-                TipopessoaId = 1, // Pessoa F�sica
+                TipopessoaId = 1,
                 Codigo = await GerarCodigoPessoaFisicaAsync()
             };
 

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace WebApiRouter.Models;
 
-namespace WebApiRouter.Models;
-
-/// <summary>
-/// CADASTRO DE PESSOAS FÍSICAS
-/// </summary>
 public partial class Pessoafisica
 {
     public int Id { get; set; }

@@ -110,85 +110,85 @@ namespace WebApiRouter.Controllers
 
             return NoContent();
         }
-/*
+
         [HttpPost("vincular-pfs")]
         public async Task<ActionResult> VincularMultiplasPessoasFisicas([FromBody] PessoaJuridicaVinculoMultiplosDTO dto)
         {
-            if (!dto.Idpfs.Any())
-                return BadRequest("Lista de pessoas f�sicas est� vazia.");
+            if (dto.Idpfs == null || !dto.Idpfs.Any())
+                return BadRequest("Lista de pessoas físicas está vazia.");
 
-            // Verifica se PJ existe
-            var pjExiste = await _context.Pessoajuridicas.AnyAsync(pj => pj.Id == dto.Idpj);
-            if (!pjExiste)
-                return NotFound($"Pessoa Jur�dica com ID {dto.Idpj} n�o encontrada.");
+            var pessoaJuridica = await _context.Pessoajuridicas
+                .Include(pj => pj.Pessoafisicas)
+                .FirstOrDefaultAsync(pj => pj.Id == dto.Idpj);
 
-            // Busca todos os PFs v�lidos
-            var pfsExistentes = await _context.Pessoafisicas
+            if (pessoaJuridica == null)
+                return NotFound($"Pessoa Jurídica com ID {dto.Idpj} não encontrada.");
+
+            var pessoasFisicas = await _context.Pessoafisicas
                 .Where(pf => dto.Idpfs.Contains(pf.Id))
-                .Select(pf => pf.Id)
                 .ToListAsync();
 
-            var idsNaoEncontrados = dto.Idpfs.Except(pfsExistentes).ToList();
+            var idsEncontrados = pessoasFisicas.Select(pf => pf.Id).ToList();
+            var idsNaoEncontrados = dto.Idpfs.Except(idsEncontrados).ToList();
+
             if (idsNaoEncontrados.Any())
-                return NotFound($"IDs de pessoas f�sicas n�o encontrados: {string.Join(", ", idsNaoEncontrados)}");
+                return NotFound($"IDs de pessoas físicas não encontrados: {string.Join(", ", idsNaoEncontrados)}");
 
-            // Busca v�nculos j� existentes
-            var vinculosExistentes = await _context.Pessoajuridicas
-                .Where(rel => rel.Id == dto.Idpj && dto.Idpfs.Contains(rel.Id))
-                .Select(rel => rel.Pessoafisicas)
-                .ToListAsync();
+            var idsJaVinculados = pessoaJuridica.Pessoafisicas.Select(pf => pf.Id).ToList();
 
-            // Filtra somente os novos v�nculos
-            var novosVinculos = dto.Idpfs
-                .Except(vinculosExistentes)
-                .Select(idpf => new PessoajuridicaPessoafisica
-                {
-                    Idpj = dto.Idpj,
-                    Idpf = idpf
-                }).ToList();
+            var novosVinculos = pessoasFisicas
+                .Where(pf => !idsJaVinculados.Contains(pf.Id))
+                .ToList();
 
             if (!novosVinculos.Any())
-                return Conflict("Todos os v�nculos informados j� existem.");
+                return Conflict("Todos os vínculos informados já existem.");
 
-            _context.PessoajuridicaPessoafisicas.AddRange(novosVinculos);
+            foreach (var pf in novosVinculos)
+            {
+                pessoaJuridica.Pessoafisicas.Add(pf);
+            }
+
             await _context.SaveChangesAsync();
 
-            return Ok($"V�nculos criados com sucesso: {novosVinculos.Count}");
+            return Ok($"Vínculos criados com sucesso: {novosVinculos.Count}");
+        }
+
+
+        [HttpDelete("{idpj}/desvincular/{idpf}")]
+        public async Task<ActionResult> DesvincularPessoaFisica(int idpj, int idpf)
+        {            
+            var pessoaJuridica = await _context.Pessoajuridicas
+                .Include(pj => pj.Pessoafisicas)
+                .FirstOrDefaultAsync(pj => pj.Id == idpj);
+
+            if (pessoaJuridica == null)
+                return NotFound($"Pessoa Jurídica com ID {idpj} não encontrada.");
+            
+            var pessoaFisica = pessoaJuridica.Pessoafisicas.FirstOrDefault(pf => pf.Id == idpf);
+
+            if (pessoaFisica == null)
+                return NotFound($"Pessoa Física com ID {idpf} não está vinculada à PJ {idpj}.");
+            
+            pessoaJuridica.Pessoafisicas.Remove(pessoaFisica);
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Pessoa Física desvinculada com sucesso.");
         }
 
         [HttpGet("{idpj}/pessoas-fisicas")]
         public async Task<ActionResult<IEnumerable<Pessoafisica>>> GetPessoasFisicasVinculadas(int idpj)
         {
-            var pjExiste = await _context.Pessoajuridicas.AnyAsync(pj => pj.Id == idpj);
-            if (!pjExiste)
-                return NotFound($"Pessoa Jur�dica com ID {idpj} n�o encontrada.");
+            var pessoaJuridica = await _context.Pessoajuridicas
+                .Include(pj => pj.Pessoafisicas)
+                .FirstOrDefaultAsync(pj => pj.Id == idpj);
 
-            var pessoasFisicas = await _context.PessoajuridicaPessoafisicas
-                .Where(rel => rel.Idpj == idpj)
-                .Join(_context.Pessoafisicas,
-                      rel => rel.Idpf,
-                      pf => pf.Id,
-                      (rel, pf) => pf)
-                .ToListAsync();
+            if (pessoaJuridica == null)
+                return NotFound($"Pessoa Jurídica com ID {idpj} não encontrada.");
 
-            return Ok(pessoasFisicas);
+            return Ok(pessoaJuridica.Pessoafisicas);
         }
 
-        [HttpDelete("{idpj}/desvincular/{idpf}")]
-        public async Task<ActionResult> DesvincularPessoaFisica(int idpj, int idpf)
-        {
-            var relacao = await _context.PessoajuridicaPessoafisicas
-                .FirstOrDefaultAsync(rel => rel.Idpj == idpj && rel.Idpf == idpf);
-
-            if (relacao == null)
-                return NotFound("V�nculo n�o encontrado.");
-
-            _context.PessoajuridicaPessoafisicas.Remove(relacao);
-            await _context.SaveChangesAsync();
-
-            return Ok("Pessoa F�sica desvinculada com sucesso.");
-        }
-*/
         private bool PessoajuridicaExists(int id)
         {
             return _context.Pessoajuridicas.Any(e => e.Id == id);

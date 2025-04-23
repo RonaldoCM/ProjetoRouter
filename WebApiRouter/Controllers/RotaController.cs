@@ -75,12 +75,10 @@ namespace WebApiRouter.Controllers
             {
                 return NotFound();
             }
-
-            // Atualiza os campos permitidos
+            
             rota.Ativo = dto.Ativo;
             rota.Observacao = dto.Observacao;
-
-            // Se desativar, seta a data de fechamento
+            
             if (dto.Ativo == 0 && rota.Datafechamento == null)
             {
                 rota.Datafechamento = DateTime.Now;
@@ -113,7 +111,7 @@ namespace WebApiRouter.Controllers
                 Observacao = rotaDTO.Observacao,
                 Datacriacao = DateTime.UtcNow,
                 Ativo = 1,
-                SituacaoRotaId = 1, // Situa��o "Criada"
+                SituacaoRotaId = 1,
                 Codigo = await GerarCodigoAsync()
             };
 
