@@ -16,6 +16,8 @@ public partial class Servico
 
     public int PessoajuridicaId { get; set; }
 
+    public string? Observacao { get; set; }
+
     public virtual Finalidade Finalidade { get; set; } = null!;
 
     public virtual Pessoajuridica Pessoajuridica { get; set; } = null!;

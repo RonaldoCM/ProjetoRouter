@@ -252,6 +252,9 @@ public partial class RouterDbContext : DbContext
             entity.Property(e => e.PessoajuridicaId).HasColumnName("PESSOAJURIDICA_ID");
             entity.Property(e => e.RotaId).HasColumnName("ROTA_ID");
             entity.Property(e => e.SituacaoServicoId).HasColumnName("SITUACAO_SERVICO_ID");
+            entity.Property(e => e.Observacao)
+                .HasMaxLength(255)
+                .HasColumnName("OBSERVACAO");
 
             entity.HasOne(d => d.Finalidade).WithMany(p => p.Servicos)
                 .HasForeignKey(d => d.FinalidadeId)

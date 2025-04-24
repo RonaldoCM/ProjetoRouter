@@ -206,36 +206,99 @@ class ServicoScreenState extends State<ServicoScreen> {
               },
             ),
             const SizedBox(height: 24),
+
             ElevatedButton(
               onPressed: () async {
-                if (_pessoaJuridicaSelecionada != null &&
-                    _finalidadeSelecionada != null &&
-                    _situacaoServicoSelecionada != null) {
-                  /*                   final novoServico = Servico(
-                    id: 0,
-                    datacriacao: DateTime.now(),
-                    datafechamento: null,
-                    idsituacaoservico: _situacaoServicoSelecionada!.id,
-                    idfinalidade: _finalidadeSelecionada!.id,
-                    idrota: widget.rota.id,
-                    idpessoajuridica: _pessoaJuridicaSelecionada!.id,
-                  ); */
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Por favor, selecione a Pessoa Jurídica, Finalidade e Situação do Serviço.',
-                      ),
-                    ),
-                  );
-                }
+                _mostrarDialogObservacao(context);
               },
-              child: const Text('Salvar Serviço'),
+              child: const Text('Observação'),
+            ),
+
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_pessoaJuridicaSelecionada != null &&
+                        _finalidadeSelecionada != null &&
+                        _situacaoServicoSelecionada != null) {
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Por favor, selecione a Pessoa Jurídica, Finalidade e Situação do Serviço.',
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text('Salvar Serviço'),
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _mostrarDialogObservacao(BuildContext context) async {
+    String observacao = ''; // Variável para armazenar a observação
+
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Align(
+          alignment: Alignment.topCenter,
+          child: AlertDialog(
+            title: const Text('Adicionar Observação'),
+            content: TextFormField(
+              maxLength: 255,
+              maxLines: null, // Permite múltiplas linhas
+              keyboardType: TextInputType.multiline,
+              onChanged: (value) {
+                observacao = value;
+              },
+              decoration: const InputDecoration(
+                //hintText: 'Digite sua observação (máx. 255 caracteres)',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Fecha o diálogo sem salvar
+                },
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Aqui você pode fazer algo com a 'observacao' digitada,
+                  // como salvar em um estado ou enviar para o backend.
+                  print('Observação digitada: $observacao');
+                  Navigator.of(
+                    context,
+                  ).pop(observacao); // Fecha o diálogo e retorna a observação
+                },
+                child: const Text('Salvar'),
+              ),
+            ],
+          ),
+        );
+      },
+    ).then((value) {
+      // Este bloco `.then` será executado quando o diálogo for fechado.
+      // O 'value' será a observação retornada pelo `Navigator.pop(observacao)`.
+      if (value != null) {
+        // Faça algo com a observação salva (ex: atualizar um estado)
+        print('Observação salva: $value');
+        // setState(() {
+        //   _suaVariavelDeObservacao = value;
+        // });
+      }
+    });
   }
 }
 

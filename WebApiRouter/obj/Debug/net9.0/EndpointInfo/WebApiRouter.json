@@ -1748,6 +1748,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "observacao": {
+            "type": "string",
+            "nullable": true
+          },
           "finalidade": {
             "$ref": "#/components/schemas/Finalidade"
           },
