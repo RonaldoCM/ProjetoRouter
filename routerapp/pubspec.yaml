@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   http: ^0.13.6
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +49,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
 
+  flutter_launcher_icons: ^0.13.1 # ou a versão mais recente
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -58,6 +61,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/icon/app_icon_full.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -89,3 +95,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon_full.png" # caminho para sua imagem

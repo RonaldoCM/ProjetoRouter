@@ -190,6 +190,84 @@
         }
       }
     },
+    "/api/Finalidade": {
+      "get": {
+        "tags": [
+          "Finalidade"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Finalidade"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Finalidade"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Finalidade"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Finalidade/{id}": {
+      "get": {
+        "tags": [
+          "Finalidade"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Finalidade"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Finalidade"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Finalidade"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/PessoaFisica": {
       "get": {
         "tags": [

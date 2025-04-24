@@ -26,14 +26,14 @@ namespace WebApiRouter.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<SituacaoRota>> GetSituacao(int id)
         {
-            var situacao = await _context.SituacaoRota.FindAsync(id);
+            var situacaoRota = await _context.SituacaoRota.FindAsync(id);
 
-            if (situacao == null)
+            if (situacaoRota == null)
             {
                 return NotFound();
             }
 
-            return situacao;
+            return situacaoRota;
         }       
     }
 }
