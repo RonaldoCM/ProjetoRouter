@@ -12,10 +12,46 @@ class CadastroPessoaJuridicaScreen extends StatefulWidget {
 class _CadastroPessoaJuridicaScreenState
     extends State<CadastroPessoaJuridicaScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _codigoController = TextEditingController();
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _cnpjController = TextEditingController();
   final TextEditingController _telefoneController = TextEditingController();
+
+  final TextEditingController _logradouroController = TextEditingController();
+  final TextEditingController _numeroController = TextEditingController();
+  final TextEditingController _bairroController = TextEditingController();
+  final TextEditingController _cidadeController = TextEditingController();
+
+  String? _estadoSelecionado; // Variável para armazenar o estado selecionado
+
+  final List<String> _estados = [
+    'AC',
+    'AL',
+    'AP',
+    'AM',
+    'BA',
+    'CE',
+    'DF',
+    'ES',
+    'GO',
+    'MA',
+    'MT',
+    'MS',
+    'MG',
+    'PA',
+    'PB',
+    'PR',
+    'PE',
+    'PI',
+    'RJ',
+    'RN',
+    'RS',
+    'RO',
+    'RR',
+    'SC',
+    'SP',
+    'SE',
+    'TO',
+  ];
 
   final _cnpjFormatter = MaskTextInputFormatter(
     mask: '##.###.###/####-##',
@@ -42,20 +78,6 @@ class _CadastroPessoaJuridicaScreenState
                 'Dados da Pessoa Jurídica',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              /*               const SizedBox(height: 16),
-              TextFormField(
-                controller: _codigoController,
-                decoration: const InputDecoration(
-                  labelText: 'Código',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, digite o código.';
-                  }
-                  return null;
-                },
-              ), */
               const SizedBox(height: 16),
               TextFormField(
                 controller: _nomeController,
@@ -95,12 +117,107 @@ class _CadastroPessoaJuridicaScreenState
                 keyboardType: TextInputType.phone,
                 inputFormatters: [_telefoneFormatter],
               ),
+
+              const SizedBox(height: 16),
+              const Text(
+                'Endereço',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _logradouroController,
+                decoration: const InputDecoration(
+                  labelText: 'Logradouro',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Digite a Rua';
+                  }
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _numeroController,
+                decoration: const InputDecoration(
+                  labelText: 'Número',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Digite o Número';
+                  }
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _bairroController,
+                decoration: const InputDecoration(
+                  labelText: 'Bairro',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Digite o Bairro';
+                  }
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _cidadeController,
+                decoration: const InputDecoration(
+                  labelText: 'Cidade',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Digite a Cidade';
+                  }
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Estado',
+                  border: OutlineInputBorder(),
+                ),
+                value: _estadoSelecionado,
+                items:
+                    _estados.map((String estado) {
+                      return DropdownMenuItem<String>(
+                        value: estado,
+                        child: Text(estado),
+                      );
+                    }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _estadoSelecionado = newValue;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Selecione o Estado';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    //String codigo = _codigoController.text;
-                    String nome = _nomeController.text;
+                    /*                     String nome = _nomeController.text;
                     String cnpjComMascara = _cnpjController.text;
                     String cnpjSemMascara = _cnpjFormatter.getUnmaskedText();
                     String? telefoneComMascara =
@@ -109,11 +226,8 @@ class _CadastroPessoaJuridicaScreenState
                             : null;
                     String? telefoneSemMascara =
                         _telefoneFormatter.getUnmaskedText();
-
-                    /*                     print(
-                      'Código: $codigo, Nome: $nome, CNPJ (com máscara): $cnpjComMascara, CNPJ (sem máscara): $cnpjSemMascara, Telefone (com máscara): $telefoneComMascara, Telefone (sem máscara): $telefoneSemMascara',
-                    ); */
-                    // Lógica para salvar a pessoa jurídica
+                    String? estado =
+                        _estadoSelecionado;  */ // Obtenha o estado selecionado
                   }
                 },
                 child: const Text('Salvar Pessoa Jurídica'),
@@ -127,10 +241,15 @@ class _CadastroPessoaJuridicaScreenState
 
   @override
   void dispose() {
-    _codigoController.dispose();
     _nomeController.dispose();
     _cnpjController.dispose();
     _telefoneController.dispose();
+
+    _logradouroController.dispose();
+    _numeroController.dispose();
+    _bairroController.dispose();
+    _cidadeController.dispose();
+
     super.dispose();
   }
 }

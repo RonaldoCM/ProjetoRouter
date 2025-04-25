@@ -1523,6 +1523,10 @@
             "type": "string",
             "nullable": true
           },
+          "telefone": {
+            "type": "string",
+            "nullable": true
+          },
           "endereco": {
             "$ref": "#/components/schemas/EnderecoCreateDTO"
           }
