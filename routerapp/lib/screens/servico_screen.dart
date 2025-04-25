@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:routerapp/models/finalidadeservico.dart';
 import 'package:routerapp/models/pessoajuridica.dart';
 import 'package:routerapp/models/rota.dart';
-import 'package:routerapp/models/servico.dart';
 import 'package:routerapp/models/situacaoservico.dart';
+import 'package:routerapp/screens/cadastropessoajuridica_screen.dart';
 import 'package:routerapp/services/finalidadeservico_service.dart';
 import 'package:routerapp/services/pessoajuridica_service.dart';
 import 'package:routerapp/services/situacaoservico_service.dart';
@@ -277,7 +277,7 @@ class ServicoScreenState extends State<ServicoScreen> {
                 onPressed: () {
                   // Aqui você pode fazer algo com a 'observacao' digitada,
                   // como salvar em um estado ou enviar para o backend.
-                  print('Observação digitada: $observacao');
+                  //('Observação digitada: $observacao');
                   Navigator.of(
                     context,
                   ).pop(observacao); // Fecha o diálogo e retorna a observação
@@ -293,37 +293,11 @@ class ServicoScreenState extends State<ServicoScreen> {
       // O 'value' será a observação retornada pelo `Navigator.pop(observacao)`.
       if (value != null) {
         // Faça algo com a observação salva (ex: atualizar um estado)
-        print('Observação salva: $value');
+        //print('Observação salva: $value');
         // setState(() {
         //   _suaVariavelDeObservacao = value;
         // });
       }
     });
-  }
-}
-
-class CadastroPessoaJuridicaScreen extends StatelessWidget {
-  const CadastroPessoaJuridicaScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Cadastrar Pessoa Jurídica')),
-      body: const Center(child: Text('Tela de Cadastro de Pessoa Jurídica')),
-    );
-  }
-}
-
-extension ServicoToJson on Servico {
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'datacriacao': datacriacao.toIso8601String(),
-      'datafechamento': datafechamento?.toIso8601String(),
-      'idsituacaoservico': idsituacaoservico,
-      'idfinalidade': idfinalidade,
-      'idrota': idrota,
-      'idpessoajuridica': idpessoajuridica,
-    };
   }
 }
