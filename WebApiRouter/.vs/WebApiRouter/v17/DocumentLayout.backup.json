@@ -3,12 +3,8 @@
   "WorkspaceRootPath": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|g:\\myfiles\\documents\\projetorouter\\webapirouter\\controllers\\pessoajuridicacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|solutionrelative:controllers\\pessoajuridicacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|g:\\myfiles\\documents\\projetorouter\\webapirouter\\dtos\\pessoajuridicaresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|solutionrelative:dtos\\pessoajuridicaresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|g:\\myfiles\\documents\\projetorouter\\webapirouter\\controllers\\servicocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|solutionrelative:controllers\\servicocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,28 +19,15 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "PessoaJuridicaController.cs",
-              "DocumentMoniker": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\Controllers\\PessoaJuridicaController.cs",
-              "RelativeDocumentMoniker": "Controllers\\PessoaJuridicaController.cs",
-              "ToolTip": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\Controllers\\PessoaJuridicaController.cs",
-              "RelativeToolTip": "Controllers\\PessoaJuridicaController.cs",
-              "ViewState": "AgIAAEYAAAAAAAAAAAAuwEMAAABAAAAAAAAAAA==",
+              "Title": "ServicoController.cs",
+              "DocumentMoniker": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\Controllers\\ServicoController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ServicoController.cs",
+              "ToolTip": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\Controllers\\ServicoController.cs",
+              "RelativeToolTip": "Controllers\\ServicoController.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAuwGAAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-26T16:27:06.783Z",
+              "WhenOpened": "2025-04-26T20:17:22.853Z",
               "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PessoaJuridicaResponseDTO.cs",
-              "DocumentMoniker": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\DTOs\\PessoaJuridicaResponseDTO.cs",
-              "RelativeDocumentMoniker": "DTOs\\PessoaJuridicaResponseDTO.cs",
-              "ToolTip": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\DTOs\\PessoaJuridicaResponseDTO.cs",
-              "RelativeToolTip": "DTOs\\PessoaJuridicaResponseDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-26T17:46:06.157Z",
               "EditorCaption": ""
             },
             {

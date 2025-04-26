@@ -1005,17 +1005,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServicoDTO"
+                  "$ref": "#/components/schemas/ServicoResponseDTO"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServicoDTO"
+                  "$ref": "#/components/schemas/ServicoResponseDTO"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServicoDTO"
+                  "$ref": "#/components/schemas/ServicoResponseDTO"
                 }
               }
             }
@@ -1106,17 +1106,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServicoDTO"
+                  "$ref": "#/components/schemas/ServicoResponseDTO"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServicoDTO"
+                  "$ref": "#/components/schemas/ServicoResponseDTO"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServicoDTO"
+                  "$ref": "#/components/schemas/ServicoResponseDTO"
                 }
               }
             }
@@ -1148,7 +1148,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ServicoDTO"
+                    "$ref": "#/components/schemas/ServicoResponseDTO"
                   }
                 }
               },
@@ -1156,7 +1156,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ServicoDTO"
+                    "$ref": "#/components/schemas/ServicoResponseDTO"
                   }
                 }
               },
@@ -1164,7 +1164,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ServicoDTO"
+                    "$ref": "#/components/schemas/ServicoResponseDTO"
                   }
                 }
               }
@@ -1796,19 +1796,9 @@
       "ServicoCreateDTO": {
         "type": "object",
         "properties": {
-          "datacriacao": {
+          "observacao": {
             "type": "string",
-            "format": "date-time",
             "nullable": true
-          },
-          "datafechamento": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "situacaoServicoId": {
-            "type": "integer",
-            "format": "int32"
           },
           "finalidadeId": {
             "type": "integer",
@@ -1825,7 +1815,7 @@
         },
         "additionalProperties": false
       },
-      "ServicoDTO": {
+      "ServicoResponseDTO": {
         "type": "object",
         "properties": {
           "id": {
@@ -1857,6 +1847,10 @@
           "nomePessoaJuridica": {
             "type": "string",
             "nullable": true
+          },
+          "observacao": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1864,19 +1858,9 @@
       "ServicoUpdateDTO": {
         "type": "object",
         "properties": {
-          "datacriacao": {
+          "observacao": {
             "type": "string",
-            "format": "date-time",
             "nullable": true
-          },
-          "datafechamento": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "situacaoServicoId": {
-            "type": "integer",
-            "format": "int32"
           },
           "finalidadeId": {
             "type": "integer",
@@ -1891,6 +1875,10 @@
             "format": "int32"
           },
           "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "situacaoServicoId": {
             "type": "integer",
             "format": "int32"
           }

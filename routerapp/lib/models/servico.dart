@@ -2,33 +2,36 @@ class Servico {
   final int id;
   final DateTime datacriacao;
   final DateTime? datafechamento;
+  final String situacao;
+  final String finalidade;
+  final String codigoRota;
+  final String nomePessoaJuridica;
   final String? observacao;
-  final int idsituacaoservico;
-  final int idfinalidade;
-  final int idrota;
-  final int idpessoajuridica;
 
   Servico({
     required this.id,
     required this.datacriacao,
     this.datafechamento,
+    required this.situacao,
+    required this.finalidade,
+    required this.codigoRota,
+    required this.nomePessoaJuridica,
     this.observacao,
-    required this.idsituacaoservico,
-    required this.idfinalidade,
-    required this.idrota,
-    required this.idpessoajuridica,
   });
 
   factory Servico.fromJson(Map<String, dynamic> json) {
     return Servico(
       id: json['id'],
-      datacriacao: json['datacriacao'],
-      datafechamento: json['datafechamento'],
+      datacriacao: DateTime.parse(json['datacriacao']),
+      datafechamento:
+          json['datafechamento'] != null
+              ? DateTime.parse(json['datafechamento'])
+              : null, // Converter String para DateTime se não for nulo
+      situacao: json['situacao'],
+      finalidade: json['finalidade'],
+      codigoRota: json['codigoRota'],
+      nomePessoaJuridica: json['nomePessoaJuridica'],
       observacao: json['observacao'],
-      idsituacaoservico: json['situacaoservicoid'],
-      idfinalidade: json['finalidadeid'],
-      idrota: json['rotaid'],
-      idpessoajuridica: json['pessoajuridicaid'],
     );
   }
 }

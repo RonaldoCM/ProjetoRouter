@@ -566,7 +566,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ServicosController",
+    "ContainingType": "WebApiRouter.Controllers.ServicosController",
     "Method": "CriarServico",
     "RelativePath": "api/Servicos",
     "HttpMethod": "POST",
@@ -581,7 +581,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "WebApiRouter.DTOs.ServicoDTO",
+        "Type": "WebApiRouter.DTOs.ServicoResponseDTO",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -592,7 +592,7 @@
     ]
   },
   {
-    "ContainingType": "ServicosController",
+    "ContainingType": "WebApiRouter.Controllers.ServicosController",
     "Method": "AtualizarServico",
     "RelativePath": "api/Servicos/{id}",
     "HttpMethod": "PUT",
@@ -613,7 +613,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ServicosController",
+    "ContainingType": "WebApiRouter.Controllers.ServicosController",
     "Method": "DeletarServico",
     "RelativePath": "api/Servicos/{id}",
     "HttpMethod": "DELETE",
@@ -629,7 +629,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ServicosController",
+    "ContainingType": "WebApiRouter.Controllers.ServicosController",
     "Method": "ObterServicoPorId",
     "RelativePath": "api/Servicos/{id}",
     "HttpMethod": "GET",
@@ -644,7 +644,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "WebApiRouter.DTOs.ServicoDTO",
+        "Type": "WebApiRouter.DTOs.ServicoResponseDTO",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -655,7 +655,7 @@
     ]
   },
   {
-    "ContainingType": "ServicosController",
+    "ContainingType": "WebApiRouter.Controllers.ServicosController",
     "Method": "ObterServicosPorRota",
     "RelativePath": "api/Servicos/rota/{rotaId}",
     "HttpMethod": "GET",
@@ -670,7 +670,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebApiRouter.DTOs.ServicoDTO, WebApiRouter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebApiRouter.DTOs.ServicoResponseDTO, WebApiRouter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

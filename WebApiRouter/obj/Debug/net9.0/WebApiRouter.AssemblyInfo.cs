@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebApiRouter")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f8a610258daa68a67c4b472b271a97ad1fa96cfe")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4f27f1bac51984787b985b0de687a173a94612b5")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebApiRouter")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebApiRouter")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

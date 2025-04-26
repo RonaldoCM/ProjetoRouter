@@ -1,6 +1,6 @@
 ﻿namespace WebApiRouter.DTOs
 {
-    public class ServicoDTO
+    public class ServicoResponseDTO
     {
         public int Id { get; set; }
         public DateTime? Datacriacao { get; set; }
@@ -9,5 +9,6 @@
         public string Finalidade { get; set; } = null!;
         public string CodigoRota { get; set; } = null!;
         public string NomePessoaJuridica { get; set; } = null!;
+        public string? Observacao { get; set; } = null!;
     }
 }

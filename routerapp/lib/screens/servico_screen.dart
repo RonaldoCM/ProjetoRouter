@@ -3,10 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:routerapp/models/finalidadeservico.dart';
 import 'package:routerapp/models/pessoajuridica.dart';
 import 'package:routerapp/models/rota.dart';
+import 'package:routerapp/models/servico.dart';
 import 'package:routerapp/models/situacaoservico.dart';
 import 'package:routerapp/screens/cadastropessoajuridica_screen.dart';
 import 'package:routerapp/services/finalidadeservico_service.dart';
 import 'package:routerapp/services/pessoajuridica_service.dart';
+import 'package:routerapp/services/servico_service.dart';
 //import 'package:routerapp/services/situacaoservico_service.dart';
 
 class ServicoScreen extends StatefulWidget {
@@ -21,11 +23,12 @@ class ServicoScreen extends StatefulWidget {
 class ServicoScreenState extends State<ServicoScreen> {
   late Future<List<PessoaJuridica>> _futurePessoasJuridicas; // Usando late
   late Future<List<FinalidadeServico>> _futureFinalidades; // Usando late
+  String? _observacaoServico; // Para armazenar a observação
   //late Future<List<SituacaoServico>> _futureSituacoesServico; // Usando late
 
   PessoaJuridica? _pessoaJuridicaSelecionada;
   FinalidadeServico? _finalidadeSelecionada;
-  SituacaoServico? _situacaoServicoSelecionada;
+  //SituacaoServico? _situacaoServicoSelecionada;
 
   @override
   void initState() {
@@ -207,51 +210,17 @@ class ServicoScreenState extends State<ServicoScreen> {
                 }
               },
             ),
-            /* const SizedBox(height: 16),
-            FutureBuilder<List<SituacaoServico>>(
-              future: _futureSituacoesServico,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text(
-                    'Erro ao carregar Situações do Serviço: ${snapshot.error}',
-                  );
-                } else if (snapshot.hasData) {
-                  final situacoesServico = snapshot.data!;
-                  return DropdownButtonFormField<SituacaoServico>(
-                    decoration: const InputDecoration(
-                      labelText: 'Situação do Serviço',
-                      border: OutlineInputBorder(),
-                    ),
-                    value: _situacaoServicoSelecionada,
-                    items:
-                        situacoesServico.map((SituacaoServico situacao) {
-                          return DropdownMenuItem<SituacaoServico>(
-                            value: situacao,
-                            child: Text(
-                              situacao.descricao,
-                            ), // Use o campo correto
-                          );
-                        }).toList(),
-                    onChanged: (SituacaoServico? newValue) {
-                      setState(() {
-                        _situacaoServicoSelecionada = newValue;
-                      });
-                    },
-                  );
-                } else {
-                  return const Text('Erro ao carregar informações.');
-                }
-              },
-            ), */
+
             const SizedBox(height: 24),
 
             ElevatedButton(
               onPressed: () async {
-                _mostrarDialogObservacao(context);
+                final observacao = await _mostrarDialogObservacao(context);
+                setState(() {
+                  _observacaoServico = observacao;
+                });
               },
-              child: const Text('Observação'),
+              child: const Text('Adicionar Observação'),
             ),
 
             const SizedBox(height: 24),
@@ -261,17 +230,37 @@ class ServicoScreenState extends State<ServicoScreen> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_pessoaJuridicaSelecionada != null &&
-                        _finalidadeSelecionada != null &&
-                        _situacaoServicoSelecionada != null) {
-                      //atribui o ID da situação
-                      //int idSituacaoCriado = 1;
+                        _finalidadeSelecionada != null) {
+                      final Servico? novoServico =
+                          await ServicoService.inserirServico(
+                            observacao: _observacaoServico,
+                            idfinalidade: _finalidadeSelecionada!.id,
+                            idrota: widget.rota.id,
+                            idpessoajuridica: _pessoaJuridicaSelecionada!.id,
+                          );
 
-                      //chama a futura rotina de salvar
+                      if (novoServico != null && mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Serviço cadastrado com sucesso!'),
+                          ),
+                        );
+                        Navigator.pop(
+                          context,
+                          true,
+                        ); // Opcional: retornar um sinal de sucesso
+                      } else if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Erro ao cadastrar o serviço.'),
+                          ),
+                        );
+                      }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
-                            'Por favor, selecione a Pessoa Jurídica, Finalidade e Situação do Serviço.',
+                            'Por favor, selecione a Pessoa Jurídica e a Finalidade do Serviço.',
                           ),
                         ),
                       );
@@ -287,61 +276,42 @@ class ServicoScreenState extends State<ServicoScreen> {
     );
   }
 
-  void _mostrarDialogObservacao(BuildContext context) async {
-    String observacao = ''; // Variável para armazenar a observação
-
+  Future<String?> _mostrarDialogObservacao(BuildContext context) async {
+    String? observacao;
     await showDialog<String>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return Align(
-          alignment: Alignment.topCenter,
-          child: AlertDialog(
-            title: const Text('Adicionar Observação'),
-            content: TextFormField(
-              maxLength: 255,
-              maxLines: null, // Permite múltiplas linhas
-              keyboardType: TextInputType.multiline,
-              onChanged: (value) {
-                observacao = value;
-              },
-              decoration: const InputDecoration(
-                //hintText: 'Digite sua observação (máx. 255 caracteres)',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Fecha o diálogo sem salvar
-                },
-                child: const Text('Cancelar'),
-              ),
-              TextButton(
-                onPressed: () {
-                  // Aqui você pode fazer algo com a 'observacao' digitada,
-                  // como salvar em um estado ou enviar para o backend.
-                  //('Observação digitada: $observacao');
-                  Navigator.of(
-                    context,
-                  ).pop(observacao); // Fecha o diálogo e retorna a observação
-                },
-                child: const Text('Salvar'),
-              ),
-            ],
+        TextEditingController observacaoController = TextEditingController(
+          text: _observacaoServico,
+        );
+        return AlertDialog(
+          title: const Text('Adicionar Observação'),
+          content: TextFormField(
+            controller: observacaoController,
+            maxLength: 255,
+            maxLines: null,
+            keyboardType: TextInputType.multiline,
+            decoration: const InputDecoration(border: OutlineInputBorder()),
           ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                observacao = observacaoController.text;
+                Navigator.of(context).pop(observacao);
+              },
+              child: const Text('Salvar'),
+            ),
+          ],
         );
       },
-    ).then((value) {
-      // Este bloco `.then` será executado quando o diálogo for fechado.
-      // O 'value' será a observação retornada pelo `Navigator.pop(observacao)`.
-      if (value != null) {
-        // Faça algo com a observação salva (ex: atualizar um estado)
-        //print('Observação salva: $value');
-        // setState(() {
-        //   _suaVariavelDeObservacao = value;
-        // });
-      }
-    });
+    );
+    return observacao;
   }
 }
