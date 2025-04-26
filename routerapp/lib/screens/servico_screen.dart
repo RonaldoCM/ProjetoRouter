@@ -78,7 +78,7 @@ class ServicoScreenState extends State<ServicoScreen> {
             ),
 
             SizedBox(height: 16),
-            Text('Situação do Serviço: Criado'),
+            Text('Situação do Serviço: Aberto'),
 
             SizedBox(height: 16),
             FutureBuilder<List<PessoaJuridica>>(
