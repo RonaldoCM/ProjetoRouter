@@ -40,7 +40,15 @@ class ServicoScreenState extends State<ServicoScreen> {
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
     return Scaffold(
-      appBar: AppBar(title: Text('Inserir Serviço')),
+      appBar: AppBar(
+        title: Text('Inserir Serviço'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
