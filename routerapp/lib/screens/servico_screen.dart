@@ -7,7 +7,7 @@ import 'package:routerapp/models/situacaoservico.dart';
 import 'package:routerapp/screens/cadastropessoajuridica_screen.dart';
 import 'package:routerapp/services/finalidadeservico_service.dart';
 import 'package:routerapp/services/pessoajuridica_service.dart';
-import 'package:routerapp/services/situacaoservico_service.dart';
+//import 'package:routerapp/services/situacaoservico_service.dart';
 
 class ServicoScreen extends StatefulWidget {
   final Rota rota;
@@ -21,7 +21,7 @@ class ServicoScreen extends StatefulWidget {
 class ServicoScreenState extends State<ServicoScreen> {
   late Future<List<PessoaJuridica>> _futurePessoasJuridicas; // Usando late
   late Future<List<FinalidadeServico>> _futureFinalidades; // Usando late
-  late Future<List<SituacaoServico>> _futureSituacoesServico; // Usando late
+  //late Future<List<SituacaoServico>> _futureSituacoesServico; // Usando late
 
   PessoaJuridica? _pessoaJuridicaSelecionada;
   FinalidadeServico? _finalidadeSelecionada;
@@ -32,7 +32,7 @@ class ServicoScreenState extends State<ServicoScreen> {
     super.initState();
     _futurePessoasJuridicas = PessoaJuridicaService.fetchPessoaJuridica();
     _futureFinalidades = FinalidadeServicoService.fetchFinalidadeServico();
-    _futureSituacoesServico = SituacaoServicoService.fetchSituacaoServico();
+    //_futureSituacoesServico = SituacaoServicoService.fetchSituacaoServico();
   }
 
   @override
@@ -48,10 +48,9 @@ class ServicoScreenState extends State<ServicoScreen> {
           children: [
             Text(
               'Rota: ${widget.rota.codigo}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              //style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
-            Text('ID: ${widget.rota.id}'),
+            //SizedBox(height: 8),
             Text('Criação: ${dateFormat.format(widget.rota.datacriacao)}'),
             if (widget.rota.datafechamento != null)
               Text(
@@ -60,12 +59,16 @@ class ServicoScreenState extends State<ServicoScreen> {
             if (widget.rota.observacao != null)
               Text('Observação: ${widget.rota.observacao}'),
             Text('Ativo: ${widget.rota.ativo == 1 ? 'Sim' : 'Não'}'),
-            Text('Situação ID: ${widget.rota.idsituacao}'),
+            Text('Situação Rota: Criada'),
             SizedBox(height: 24),
             Text(
               'Novo Serviço',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
+
+            SizedBox(height: 16),
+            Text('Situação do Serviço: Criado'),
+
             SizedBox(height: 16),
             FutureBuilder<List<PessoaJuridica>>(
               future: _futurePessoasJuridicas,
@@ -80,6 +83,7 @@ class ServicoScreenState extends State<ServicoScreen> {
                   final pessoasJuridicas = snapshot.data!;
                   if (pessoasJuridicas.isEmpty) {
                     return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Nenhuma Pessoa Jurídica cadastrada.'),
                         SizedBox(height: 8),
@@ -167,7 +171,7 @@ class ServicoScreenState extends State<ServicoScreen> {
                 }
               },
             ),
-            const SizedBox(height: 16),
+            /* const SizedBox(height: 16),
             FutureBuilder<List<SituacaoServico>>(
               future: _futureSituacoesServico,
               builder: (context, snapshot) {
@@ -204,7 +208,7 @@ class ServicoScreenState extends State<ServicoScreen> {
                   return const Text('Erro ao carregar informações.');
                 }
               },
-            ),
+            ), */
             const SizedBox(height: 24),
 
             ElevatedButton(
@@ -223,6 +227,10 @@ class ServicoScreenState extends State<ServicoScreen> {
                     if (_pessoaJuridicaSelecionada != null &&
                         _finalidadeSelecionada != null &&
                         _situacaoServicoSelecionada != null) {
+                      //atribui o ID da situação
+                      //int idSituacaoCriado = 1;
+
+                      //chama a futura rotina de salvar
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

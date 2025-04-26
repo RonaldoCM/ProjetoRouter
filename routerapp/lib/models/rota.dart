@@ -22,12 +22,13 @@ class Rota {
       id: json['id'],
       codigo: json['codigo'],
       datacriacao: DateTime.parse(json['datacriacao']),
-      datafechamento: json['datafechamento'] != null
-          ? DateTime.tryParse(json['datafechamento'])
-          : null,
+      datafechamento:
+          json['datafechamento'] != null
+              ? DateTime.tryParse(json['datafechamento'])
+              : null,
       observacao: json['observacao'],
       ativo: json['ativo'],
-      idsituacao: json['idsituacao'],
+      idsituacao: json['situacaoRotaId'],
     );
   }
 }

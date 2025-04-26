@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:routerapp/models/rota.dart';
-import 'package:routerapp/screens/servico_screen.dart'; // Import da ServicoScreen
+import 'package:routerapp/screens/servico_screen.dart';
+import 'package:routerapp/services/rota_service.dart'; // Import da ServicoScreen
 // Importe seus services e outros models necessários
 
 class RotaScreen extends StatefulWidget {
@@ -19,7 +20,7 @@ class RotaScreenState extends State<RotaScreen> {
   void initState() {
     super.initState();
     // Carregue suas rotas aqui (se já não estiverem carregadas)
-    // _futureRotas = RotaService.fetchRotas();
+    _futureRotas = RotaService.fetchRotas();
   }
 
   @override
@@ -77,26 +78,29 @@ class RotaScreenState extends State<RotaScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Criar uma nova instância de Rota (com valores iniciais, se necessário)
-          final novaRota = Rota(
-            id: 0, // O ID será gerado pelo backend
-            codigo:
-                '', // Você pode gerar um código inicial ou deixar o usuário preencher
-            datacriacao: DateTime.now(),
-            datafechamento: null,
-            observacao: null,
-            ativo: 1, // Ou outro valor padrão
-            idsituacao: 1, // Ou outro valor padrão
-          );
+        onPressed: () async {
+          // Chamar o serviço para criar a rota com observação nula
+          Rota? novaRota = await RotaService.criarRota(null);
 
-          // Navegar para a ServicoScreen, passando a nova rota
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ServicoScreen(rota: novaRota),
-            ),
-          );
+          if (novaRota != null) {
+            if (mounted) {
+              // Navegar para a ServicoScreen, passando a rota criada
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ServicoScreen(rota: novaRota),
+                ),
+              );
+            }
+          } else {
+            // Verificar se o widget ainda está montado antes de mostrar o SnackBar
+            if (mounted) {
+              // Mostrar uma mensagem de erro se a criação da rota falhar
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Erro ao criar a nova rota.')),
+              );
+            }
+          }
         },
         child: const Icon(Icons.add),
       ),

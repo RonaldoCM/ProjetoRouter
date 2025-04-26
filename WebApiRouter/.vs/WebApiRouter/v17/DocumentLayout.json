@@ -1,20 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|g:\\myfiles\\documents\\projetorouter\\webapirouter\\models\\endereco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|solutionrelative:models\\endereco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|g:\\myfiles\\documents\\projetorouter\\webapirouter\\dtos\\enderecocreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|solutionrelative:dtos\\enderecocreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|g:\\myfiles\\documents\\projetorouter\\webapirouter\\dtos\\pessoajuridicacreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F6A45A1-2FE2-457E-A893-8E6D925BF651}|WebApiRouter.csproj|solutionrelative:dtos\\pessoajuridicacreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -22,49 +9,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": -1,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "PessoaJuridicaCreateDTO.cs",
-              "DocumentMoniker": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\DTOs\\PessoaJuridicaCreateDTO.cs",
-              "RelativeDocumentMoniker": "DTOs\\PessoaJuridicaCreateDTO.cs",
-              "ToolTip": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\DTOs\\PessoaJuridicaCreateDTO.cs",
-              "RelativeToolTip": "DTOs\\PessoaJuridicaCreateDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAABAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-25T21:29:59.889Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "EnderecoCreateDTO.cs",
-              "DocumentMoniker": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\DTOs\\EnderecoCreateDTO.cs",
-              "RelativeDocumentMoniker": "DTOs\\EnderecoCreateDTO.cs",
-              "ToolTip": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\DTOs\\EnderecoCreateDTO.cs",
-              "RelativeToolTip": "DTOs\\EnderecoCreateDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-25T21:24:11.756Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Endereco.cs",
-              "DocumentMoniker": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\Models\\Endereco.cs",
-              "RelativeDocumentMoniker": "Models\\Endereco.cs",
-              "ToolTip": "G:\\MyFiles\\Documents\\ProjetoRouter\\WebApiRouter\\Models\\Endereco.cs",
-              "RelativeToolTip": "Models\\Endereco.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-25T21:30:47.642Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"

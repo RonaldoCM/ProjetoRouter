@@ -16,4 +16,27 @@ class RotaService {
       throw Exception('Falha ao carregar rotas');
     }
   }
+
+  static Future<Rota?> criarRota(String? observacao) async {
+    try {
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String?>{'observacao': observacao}),
+      );
+
+      if (response.statusCode == 201) {
+        return Rota.fromJson(jsonDecode(response.body));
+      } else {
+        // print('Erro ao criar rota: ${response.statusCode}');
+        // print('Corpo da resposta: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      //('Erro de conexão ao criar rota: $e');
+      return null;
+    }
+  }
 }
