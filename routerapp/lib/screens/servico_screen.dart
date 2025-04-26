@@ -245,10 +245,6 @@ class ServicoScreenState extends State<ServicoScreen> {
                             content: Text('Serviço cadastrado com sucesso!'),
                           ),
                         );
-                        Navigator.pop(
-                          context,
-                          true,
-                        ); // Opcional: retornar um sinal de sucesso
                       } else if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
