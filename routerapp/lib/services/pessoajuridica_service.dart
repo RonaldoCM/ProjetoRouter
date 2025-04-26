@@ -16,4 +16,47 @@ class PessoaJuridicaService {
       throw Exception('Falha ao carregar Pessoa Jurídica');
     }
   }
+
+  static Future<PessoaJuridica?> inserirPessoaJuridica({
+    required String nome,
+    required String cnpj,
+    String? telefone,
+    required String logradouro,
+    required String numero,
+    required String bairro,
+    required String cidade,
+    required String estado,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'nome': nome,
+          'cnpj': cnpj,
+          'telefone': telefone,
+          'endereco': {
+            'logradouro': logradouro,
+            'numero': numero,
+            'bairro': bairro,
+            'cidade': cidade,
+            'estado': estado,
+          },
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        return PessoaJuridica.fromJson(jsonDecode(response.body));
+      } else {
+        // print('Erro ao inserir Pessoa Jurídica: ${response.statusCode}');
+        // print('Corpo da resposta: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      //print('Erro de conexão ao inserir Pessoa Jurídica: $e');
+      return null;
+    }
+  }
 }

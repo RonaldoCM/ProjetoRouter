@@ -24,16 +24,36 @@ namespace WebApiRouter.Controllers
         }
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pessoajuridica>> GetPessoajuridica(int id)
+        public async Task<ActionResult<PessoaJuridicaResponseDTO>> GetPessoajuridica(int id)
         {
-            var pessoa = await _context.Pessoajuridicas.FindAsync(id);
+            var pessoa = await _context.Pessoajuridicas
+        .Include(p => p.IdenderecoNavigation) // Inclua o Endereco
+        .FirstOrDefaultAsync(p => p.Id == id);
 
             if (pessoa == null)
             {
                 return NotFound();
             }
 
-            return pessoa;
+            var pessoaDTO = new PessoaJuridicaResponseDTO
+            {
+                Id = pessoa.Id,
+                Nome = pessoa.Nome,
+                Cnpj = pessoa.Cnpj,
+                Telefone = pessoa.Telefone,
+                Codigo = pessoa.Codigo,
+
+                Endereco = new EnderecoCreateDTO
+                {
+                    Logradouro = pessoa.IdenderecoNavigation.Logradouro,
+                    Numero = pessoa.IdenderecoNavigation.Numero,
+                    Bairro = pessoa.IdenderecoNavigation.Bairro,
+                    Cidade = pessoa.IdenderecoNavigation.Cidade,
+                    Estado = pessoa.IdenderecoNavigation.Estado
+                }
+            };
+
+            return pessoaDTO;
         }
         
         [HttpPut("{id}")]
@@ -65,7 +85,7 @@ namespace WebApiRouter.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult<Pessoajuridica>> PostPessoajuridica(PessoaJuridicaCreateDTO pessoaJuridicaDTO)
+        public async Task<ActionResult<PessoaJuridicaResponseDTO>> PostPessoajuridica(PessoaJuridicaCreateDTO pessoaJuridicaDTO)
         {
             var endereco = new Endereco
             {
@@ -84,6 +104,7 @@ namespace WebApiRouter.Controllers
             {
                 Nome = pessoaJuridicaDTO.Nome,
                 Cnpj = pessoaJuridicaDTO.Cnpj,
+                Telefone = pessoaJuridicaDTO.Telefone,
                 Ativo = 1,
                 Idendereco = endereco.Id,
                 Codigo = await GerarCodigoPessoaJuridicaAsync()

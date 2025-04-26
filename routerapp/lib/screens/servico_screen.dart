@@ -118,24 +118,52 @@ class ServicoScreenState extends State<ServicoScreen> {
                       ],
                     );
                   } else {
-                    return DropdownButtonFormField<PessoaJuridica>(
-                      decoration: const InputDecoration(
-                        labelText: 'Pessoa Jurídica',
-                        border: OutlineInputBorder(),
-                      ),
-                      value: _pessoaJuridicaSelecionada,
-                      items:
-                          pessoasJuridicas.map((PessoaJuridica pj) {
-                            return DropdownMenuItem<PessoaJuridica>(
-                              value: pj,
-                              child: Text(pj.nome),
-                            );
-                          }).toList(),
-                      onChanged: (PessoaJuridica? newValue) {
-                        setState(() {
-                          _pessoaJuridicaSelecionada = newValue;
-                        });
-                      },
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: [
+                        SizedBox(height: 8),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        const CadastroPessoaJuridicaScreen(),
+                              ),
+                            ).then((value) {
+                              if (value != null && value == true) {
+                                setState(() {
+                                  _futurePessoasJuridicas =
+                                      PessoaJuridicaService.fetchPessoaJuridica();
+                                });
+                              }
+                            });
+                          },
+                          child: const Text('Cadastrar Pessoa Jurídica'),
+                        ),
+                        const SizedBox(height: 16),
+                        DropdownButtonFormField<PessoaJuridica>(
+                          decoration: const InputDecoration(
+                            labelText: 'Pessoa Jurídica',
+                            border: OutlineInputBorder(),
+                          ),
+                          value: _pessoaJuridicaSelecionada,
+                          items:
+                              pessoasJuridicas.map((PessoaJuridica pj) {
+                                return DropdownMenuItem<PessoaJuridica>(
+                                  value: pj,
+                                  child: Text(pj.nome),
+                                );
+                              }).toList(),
+                          onChanged: (PessoaJuridica? newValue) {
+                            setState(() {
+                              _pessoaJuridicaSelecionada = newValue;
+                            });
+                          },
+                        ),
+                      ],
                     );
                   }
                 } else {

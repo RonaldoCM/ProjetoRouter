@@ -102,12 +102,12 @@ COMMENT = 'CADASTRO DOS ENDEREÇOS';
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `routerdb`.`PESSOAJURIDICA` (
   `ID` INT NOT NULL AUTO_INCREMENT,
-  `CODIGO` CHAR(5) NOT NULL,
+  `CODIGO` CHAR(45) NOT NULL,
   `NOME` VARCHAR(200) NOT NULL,
-  `CNPJ` CHAR(14) NOT NULL,
+  `CNPJ` CHAR(18) NOT NULL,
   `ATIVO` TINYINT NOT NULL DEFAULT '1',
   `IDENDERECO` INT NOT NULL,
-  `TELEFONE` CHAR(12) NULL,
+  `TELEFONE` CHAR(15) NULL,
   PRIMARY KEY (`ID`),
   INDEX `fk_rta_pessoajuridica_rta_endereco1_idx` (`IDENDERECO` ASC) VISIBLE,
   CONSTRAINT `fk_rta_pessoajuridica_rta_endereco1`

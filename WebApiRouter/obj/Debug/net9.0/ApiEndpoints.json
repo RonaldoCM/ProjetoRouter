@@ -299,7 +299,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "WebApiRouter.Models.Pessoajuridica",
+        "Type": "WebApiRouter.DTOs.PessoaJuridicaResponseDTO",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -325,7 +325,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "WebApiRouter.Models.Pessoajuridica",
+        "Type": "WebApiRouter.DTOs.PessoaJuridicaResponseDTO",
         "MediaTypes": [
           "text/plain",
           "application/json",

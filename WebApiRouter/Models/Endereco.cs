@@ -1,4 +1,6 @@
-﻿namespace WebApiRouter.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace WebApiRouter.Models;
 
 public partial class Endereco
 {
@@ -16,5 +18,6 @@ public partial class Endereco
 
     public sbyte Ativo { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Pessoajuridica> Pessoajuridicas { get; set; } = new List<Pessoajuridica>();
 }

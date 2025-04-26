@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:routerapp/models/pessoajuridica.dart';
+import 'package:routerapp/services/pessoajuridica_service.dart';
 
 class CadastroPessoaJuridicaScreen extends StatefulWidget {
   const CadastroPessoaJuridicaScreen({super.key});
@@ -215,19 +217,44 @@ class _CadastroPessoaJuridicaScreenState
 
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    /*                     String nome = _nomeController.text;
-                    String cnpjComMascara = _cnpjController.text;
-                    String cnpjSemMascara = _cnpjFormatter.getUnmaskedText();
-                    String? telefoneComMascara =
-                        _telefoneController.text.isNotEmpty
-                            ? _telefoneController.text
-                            : null;
-                    String? telefoneSemMascara =
-                        _telefoneFormatter.getUnmaskedText();
-                    String? estado =
-                        _estadoSelecionado;  */ // Obtenha o estado selecionado
+                    PessoaJuridica? novaPessoaJuridica =
+                        await PessoaJuridicaService.inserirPessoaJuridica(
+                          nome: _nomeController.text,
+                          cnpj: _cnpjController.text,
+                          telefone:
+                              _telefoneController.text.isNotEmpty
+                                  ? _telefoneController.text
+                                  : null,
+                          logradouro: _logradouroController.text,
+                          numero: _numeroController.text,
+                          bairro: _bairroController.text,
+                          cidade: _cidadeController.text,
+                          estado:
+                              _estadoSelecionado!, // Já validado pelo DropdownButtonFormField
+                        );
+
+                    if (novaPessoaJuridica != null && mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Pessoa Jurídica cadastrada com sucesso!',
+                          ),
+                        ),
+                      );
+                      // Opcional: Navegar para outra tela ou limpar o formulário
+                      Navigator.pop(
+                        context,
+                        true,
+                      ); // Pode retornar um sinal de sucesso
+                    } else if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Erro ao cadastrar a Pessoa Jurídica.'),
+                        ),
+                      );
+                    }
                   }
                 },
                 child: const Text('Salvar Pessoa Jurídica'),
@@ -239,7 +266,7 @@ class _CadastroPessoaJuridicaScreenState
     );
   }
 
-  @override
+  /*   @override
   void dispose() {
     _nomeController.dispose();
     _cnpjController.dispose();
@@ -251,5 +278,5 @@ class _CadastroPessoaJuridicaScreenState
     _cidadeController.dispose();
 
     super.dispose();
-  }
+  } */
 }
