@@ -10,5 +10,11 @@
         public string CodigoRota { get; set; } = null!;
         public string NomePessoaJuridica { get; set; } = null!;
         public string? Observacao { get; set; } = null!;
+
+        public string Logradouro { get; set; } = null!;
+        public string Numero { get; set; } = null!;
+        public string Bairro { get; set; } = null!;
+        public string Cidade { get; set; } = null!;
+        public string Estado { get; set; } = null!;
     }
 }

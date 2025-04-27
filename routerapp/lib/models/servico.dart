@@ -7,6 +7,11 @@ class Servico {
   final String codigoRota;
   final String nomePessoaJuridica;
   final String? observacao;
+  final String logradouro;
+  final String numero;
+  final String bairro;
+  final String cidade;
+  final String estado;
 
   Servico({
     required this.id,
@@ -17,6 +22,11 @@ class Servico {
     required this.codigoRota,
     required this.nomePessoaJuridica,
     this.observacao,
+    required this.logradouro,
+    required this.numero,
+    required this.bairro,
+    required this.cidade,
+    required this.estado,
   });
 
   factory Servico.fromJson(Map<String, dynamic> json) {
@@ -32,6 +42,11 @@ class Servico {
       codigoRota: json['codigoRota'],
       nomePessoaJuridica: json['nomePessoaJuridica'],
       observacao: json['observacao'],
+      logradouro: json['logradouro'],
+      numero: json['numero'],
+      bairro: json['bairro'],
+      cidade: json['cidade'],
+      estado: json['estado'],
     );
   }
 }

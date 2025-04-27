@@ -123,6 +123,8 @@ namespace WebApiRouter.Controllers
 
             var servicos = await _context.Servicos
                 .Where(s => s.RotaId == rotaId)
+                .Include(s => s.Pessoajuridica) // Carrega a PessoaJuridica
+                    .ThenInclude(pj => pj.IdenderecoNavigation) // Carrega o Endereco da PessoaJuridica
                 .Select(s => new ServicoResponseDTO
                 {
                     Id = s.Id,
@@ -132,8 +134,14 @@ namespace WebApiRouter.Controllers
                     Finalidade = s.Finalidade.Descricao,
                     CodigoRota = s.Rota.Codigo,
                     NomePessoaJuridica = s.Pessoajuridica.Nome,
-                    Observacao = s.Observacao
-                    
+                    Observacao = s.Observacao,
+
+                    // Mapeamento das propriedades do Endereço
+                    Logradouro = s.Pessoajuridica.IdenderecoNavigation.Logradouro,
+                    Numero = s.Pessoajuridica.IdenderecoNavigation.Numero,
+                    Bairro = s.Pessoajuridica.IdenderecoNavigation.Bairro,
+                    Cidade = s.Pessoajuridica.IdenderecoNavigation.Cidade,
+                    Estado = s.Pessoajuridica.IdenderecoNavigation.Estado
                 })
                 .ToListAsync();
 

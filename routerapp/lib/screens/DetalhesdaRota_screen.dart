@@ -24,14 +24,6 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
     _futureServicos = ServicoService.fetchServicosByRota(widget.rotaId);
   }
 
-  // Mapa para traduzir a string de situação para um ID
-  /*   final Map<String, int> _situacaoParaId = {
-    'Aberto': 1,
-    'Fechado': 2,
-    'Cancelado': 3,
-    'Incompleto': 4,
-  }; */
-
   // Mapa para traduzir o ID para a string de situação (para exibição)
   final Map<int, String> _idParaSituacao = {
     1: 'Aberto',
@@ -39,82 +31,6 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
     3: 'Cancelado',
     4: 'Incompleto',
   };
-
-  Future<void> _atualizarSituacao(Servico servico, int novaSituacaoId) async {
-    bool sucesso = await ServicoService.atualizarSituacaoServico(
-      idServico: servico.id,
-      idSituacaoServico: novaSituacaoId,
-    );
-
-    if (sucesso) {
-      setState(() {
-        _futureServicos = ServicoService.fetchServicosByRota(widget.rotaId);
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Serviço "${servico.id}" atualizado para ${_idParaSituacao[novaSituacaoId]}.',
-          ),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao atualizar o serviço "${servico.id}".')),
-      );
-    }
-  }
-
-  Future<void> _mostrarConfirmacaoCancelamento(
-    BuildContext context,
-    Servico servico,
-  ) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirmar Cancelamento'),
-          content: const Text(
-            'Você tem certeza que deseja cancelar este serviço?',
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Não'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Fecha o diálogo
-              },
-            ),
-            TextButton(
-              child: const Text('Sim'),
-              onPressed: () async {
-                // Realiza o cancelamento (situação 3)
-                await _atualizarSituacao(servico, 3);
-                Navigator.of(context).pop(); // Fecha o diálogo
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  /*   Future<void> _deletarServico(BuildContext context, Servico servico) async {
-    bool sucesso = await ServicoService.deletarServico(servico.id);
-    if (sucesso) {
-      setState(() {
-        _futureServicos = ServicoService.fetchServicosByRota(widget.rotaId);
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Serviço "${servico.id}" deletado com sucesso.'),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao deletar o serviço "${servico.id}".')),
-      );
-    }
-  } */
 
   @override
   Widget build(BuildContext context) {
@@ -174,6 +90,10 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
                                   Text(
                                     'Destino: ${servico.nomePessoaJuridica}',
                                   ),
+                                  Text(
+                                    '${servico.logradouro}, ${servico.numero} ${servico.bairro}',
+                                  ),
+                                  Text('${servico.cidade} / ${servico.estado}'),
                                   if (servico.observacao != null)
                                     Text('Observação: ${servico.observacao}'),
                                 ],
@@ -254,6 +174,64 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
           }
         },
       ),
+    );
+  }
+
+  Future<void> _atualizarSituacao(Servico servico, int novaSituacaoId) async {
+    bool sucesso = await ServicoService.atualizarSituacaoServico(
+      idServico: servico.id,
+      idSituacaoServico: novaSituacaoId,
+    );
+
+    if (sucesso) {
+      setState(() {
+        _futureServicos = ServicoService.fetchServicosByRota(widget.rotaId);
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Serviço "${servico.id}" atualizado para ${_idParaSituacao[novaSituacaoId]}.',
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao atualizar o serviço "${servico.id}".')),
+      );
+    }
+  }
+
+  Future<void> _mostrarConfirmacaoCancelamento(
+    BuildContext context,
+    Servico servico,
+  ) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar Cancelamento'),
+          content: const Text(
+            'Você tem certeza que deseja cancelar este serviço?',
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Não'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o diálogo
+              },
+            ),
+            TextButton(
+              child: const Text('Sim'),
+              onPressed: () async {
+                // Realiza o cancelamento (situação 3)
+                await _atualizarSituacao(servico, 3);
+                Navigator.of(context).pop(); // Fecha o diálogo
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
