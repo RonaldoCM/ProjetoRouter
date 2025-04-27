@@ -5,7 +5,7 @@ import 'package:routerapp/models/servico.dart';
 import 'package:routerapp/services/servico_service.dart'; // Importe o serviço de fetch
 
 class DetalhesDaRotaScreen extends StatefulWidget {
-  final int rotaId; // Passar a ID da rota para buscar os serviços
+  final int rotaId;
 
   const DetalhesDaRotaScreen({super.key, required this.rotaId});
 
