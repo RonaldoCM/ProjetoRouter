@@ -216,9 +216,13 @@ class ServicoScreenState extends State<ServicoScreen> {
             ElevatedButton(
               onPressed: () async {
                 final observacao = await _mostrarDialogObservacao(context);
-                setState(() {
-                  _observacaoServico = observacao;
-                });
+
+                if (observacao != null) {
+                  // Só atualiza se usuário clicou em "Salvar"
+                  setState(() {
+                    _observacaoServico = observacao;
+                  });
+                }
               },
               child: const Text('Adicionar Observação'),
             ),
@@ -245,6 +249,8 @@ class ServicoScreenState extends State<ServicoScreen> {
                             content: Text('Serviço cadastrado com sucesso!'),
                           ),
                         );
+
+                        _resetarCampos();
                       } else if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -272,8 +278,19 @@ class ServicoScreenState extends State<ServicoScreen> {
     );
   }
 
+  void _resetarCampos() {
+    setState(() {
+      _pessoaJuridicaSelecionada = null;
+      _finalidadeSelecionada = null;
+      _observacaoServico = null;
+    });
+  }
+
   Future<String?> _mostrarDialogObservacao(BuildContext context) async {
     String? observacao;
+
+    final FocusNode focusNode = FocusNode(); // <-- aqui
+
     await showDialog<String>(
       context: context,
       barrierDismissible: false,
@@ -281,9 +298,17 @@ class ServicoScreenState extends State<ServicoScreen> {
         TextEditingController observacaoController = TextEditingController(
           text: _observacaoServico,
         );
+
+        // Logo depois que o diálogo for construído, dá foco
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          focusNode.requestFocus();
+        });
+
         return AlertDialog(
           title: const Text('Adicionar Observação'),
           content: TextFormField(
+            focusNode: focusNode, // <-- conecta aqui
+
             controller: observacaoController,
             maxLength: 255,
             maxLines: null,
@@ -308,6 +333,8 @@ class ServicoScreenState extends State<ServicoScreen> {
         );
       },
     );
+
+    focusNode.dispose(); // não esqueça de liberar depois!
     return observacao;
   }
 }
