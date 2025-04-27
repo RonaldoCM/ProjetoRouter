@@ -1,7 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:routerapp/models/rota.dart';
-import 'package:routerapp/screens/DetalhesdaRota_screen.dart';
+import 'package:routerapp/screens/detalhesdarota_screen.dart';
 import 'package:routerapp/screens/servico_screen.dart';
 import 'package:routerapp/services/rota_service.dart'; // Import da ServicoScreen
 // Importe seus services e outros models necessários

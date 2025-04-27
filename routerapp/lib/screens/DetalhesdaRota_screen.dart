@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:routerapp/models/servico.dart';
 import 'package:routerapp/services/servico_service.dart'; // Importe o serviço de fetch
@@ -22,12 +24,12 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
   }
 
   // Mapa para traduzir a string de situação para um ID
-  final Map<String, int> _situacaoParaId = {
+  /*   final Map<String, int> _situacaoParaId = {
     'Aberto': 1,
     'Fechado': 2,
     'Cancelado': 3,
     'Incompleto': 4,
-  };
+  }; */
 
   // Mapa para traduzir o ID para a string de situação (para exibição)
   final Map<int, String> _idParaSituacao = {

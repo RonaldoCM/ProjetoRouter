@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:routerapp/models/pessoajuridica.dart';
@@ -213,48 +215,55 @@ class _CadastroPessoaJuridicaScreenState
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
 
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    PessoaJuridica? novaPessoaJuridica =
-                        await PessoaJuridicaService.inserirPessoaJuridica(
-                          nome: _nomeController.text,
-                          cnpj: _cnpjController.text,
-                          telefone:
-                              _telefoneController.text.isNotEmpty
-                                  ? _telefoneController.text
-                                  : null,
-                          logradouro: _logradouroController.text,
-                          numero: _numeroController.text,
-                          bairro: _bairroController.text,
-                          cidade: _cidadeController.text,
-                          estado:
-                              _estadoSelecionado!, // Já validado pelo DropdownButtonFormField
-                        );
+                  /*                if (!_formKey.currentState!.validate()) {
+                    return; // valida primeiro
+                  } */
 
-                    if (novaPessoaJuridica != null && mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Pessoa Jurídica cadastrada com sucesso!',
-                          ),
-                        ),
+                  // Captura todos os valores antes do await:
+                  final nome = _nomeController.text;
+                  final cnpj = _cnpjController.text;
+                  final telefone =
+                      _telefoneController.text.isNotEmpty
+                          ? _telefoneController.text
+                          : null;
+                  final logradouro = _logradouroController.text;
+                  final numero = _numeroController.text;
+                  final bairro = _bairroController.text;
+                  final cidade = _cidadeController.text;
+                  final estado = _estadoSelecionado!;
+
+                  PessoaJuridica? novaPessoaJuridica =
+                      await PessoaJuridicaService.inserirPessoaJuridica(
+                        nome: nome,
+                        cnpj: cnpj,
+                        telefone: telefone,
+                        logradouro: logradouro,
+                        numero: numero,
+                        bairro: bairro,
+                        cidade: cidade,
+                        estado: estado,
                       );
-                      // Opcional: Navegar para outra tela ou limpar o formulário
-                      Navigator.pop(
-                        context,
-                        true,
-                      ); // Pode retornar um sinal de sucesso
-                    } else if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Erro ao cadastrar a Pessoa Jurídica.'),
+
+                  if (novaPessoaJuridica != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Pessoa Jurídica cadastrada com sucesso!',
                         ),
-                      );
-                    }
+                      ),
+                    );
+
+                    Navigator.pop(context, true);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Erro ao cadastrar a Pessoa Jurídica.'),
+                      ),
+                    );
                   }
                 },
                 child: const Text('Salvar Pessoa Jurídica'),
@@ -265,18 +274,4 @@ class _CadastroPessoaJuridicaScreenState
       ),
     );
   }
-
-  /*   @override
-  void dispose() {
-    _nomeController.dispose();
-    _cnpjController.dispose();
-    _telefoneController.dispose();
-
-    _logradouroController.dispose();
-    _numeroController.dispose();
-    _bairroController.dispose();
-    _cidadeController.dispose();
-
-    super.dispose();
-  } */
 }
