@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:routerapp/models/servico.dart';
 import 'package:routerapp/services/servico_service.dart'; // Importe o serviço de fetch
 
@@ -117,6 +118,7 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
     return Scaffold(
       appBar: AppBar(title: const Text('Detalhes da Rota')),
       body: FutureBuilder<List<Servico>>(
@@ -160,7 +162,9 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text('Criação: ${servico.datacriacao}'),
+                                  Text(
+                                    'Criação:  ${dateFormat.format(servico.datacriacao)}',
+                                  ),
                                   if (servico.datafechamento != null)
                                     Text(
                                       'Fechamento: ${servico.datafechamento}',
@@ -168,7 +172,7 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
                                   Text('Finalidade: ${servico.finalidade}'),
                                   //Text('Rota: ${servico.codigoRota}'),
                                   Text(
-                                    'Pessoa Jurídica: ${servico.nomePessoaJuridica}',
+                                    'Destino: ${servico.nomePessoaJuridica}',
                                   ),
                                   if (servico.observacao != null)
                                     Text('Observação: ${servico.observacao}'),

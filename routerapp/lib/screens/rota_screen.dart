@@ -83,7 +83,7 @@ class RotaScreenState extends State<RotaScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Text('ID: ${rota.id}'),
+                            // Text('ID: ${rota.id}'),
                             Text(
                               'Criação: ${dateFormat.format(rota.datacriacao)}',
                             ),
@@ -94,7 +94,7 @@ class RotaScreenState extends State<RotaScreen> {
                             if (rota.observacao != null)
                               Text('Observação: ${rota.observacao}'),
                             Text('Ativo: ${rota.ativo == 1 ? 'Sim' : 'Não'}'),
-                            Text('Situação ID: ${rota.idsituacao}'),
+                            //Text('Situação ID: ${rota.idsituacao}'),
                           ],
                         ),
                       ),
