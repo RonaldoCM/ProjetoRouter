@@ -4,7 +4,7 @@ import 'package:routerapp/models/finalidadeservico.dart';
 import 'package:routerapp/models/pessoajuridica.dart';
 import 'package:routerapp/models/rota.dart';
 import 'package:routerapp/models/servico.dart';
-import 'package:routerapp/models/situacaoservico.dart';
+//import 'package:routerapp/models/situacaoservico.dart';
 import 'package:routerapp/screens/cadastropessoajuridica_screen.dart';
 import 'package:routerapp/services/finalidadeservico_service.dart';
 import 'package:routerapp/services/pessoajuridica_service.dart';

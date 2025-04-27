@@ -39,7 +39,7 @@ namespace WebApiRouter.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarServico(int id, [FromBody] ServicoUpdateDTO dto)
+        public async Task<ActionResult> AtualizarServico(int id, [FromBody] ServicoUpdateDTO dto)
         {
             if (id != dto.Id)
                 return BadRequest("ID do serviço não confere com a URL.");
@@ -47,9 +47,7 @@ namespace WebApiRouter.Controllers
             var servico = await _context.Servicos.FindAsync(id);
             if (servico == null)
                 return NotFound("Serviço não encontrado.");
-
-            //servico.Datacriacao = dto.Datacriacao;
-            //servico.Datafechamento = dto.Datafechamento;
+            
             servico.SituacaoServicoId = dto.SituacaoServicoId;
             servico.FinalidadeId = dto.FinalidadeId;
             servico.RotaId = dto.RotaId;
@@ -58,6 +56,23 @@ namespace WebApiRouter.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpPut("{id}/situacao")]
+        public async Task<ActionResult> AtualizarSituacaoServico(int id, [FromBody] ServicoUpdateDTO dto)
+        {
+            if (id != dto.Id)
+                return BadRequest("ID do serviço não confere com a URL.");
+
+            var servico = await _context.Servicos.FindAsync(id);
+            if (servico == null)
+                return NotFound("Serviço não encontrado.");
+
+            servico.SituacaoServicoId = dto.SituacaoServicoId;
+            
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarServico(int id)

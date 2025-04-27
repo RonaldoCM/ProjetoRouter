@@ -17,6 +17,42 @@ class ServicoService {
     }
   }
 
+  // Novo método para buscar serviços de uma rota
+  static Future<List<Servico>> fetchServicosByRota(int rotaId) async {
+    final url = '$baseUrl/rota/$rotaId'; // Definimos a URL com a rotaId
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((r) => Servico.fromJson(r)).toList();
+    } else {
+      throw Exception('Falha ao carregar serviços para a rota $rotaId');
+    }
+  }
+
+  // Novo método para atualizar a situação do serviço
+  static Future<bool> atualizarSituacaoServico({
+    required int idServico,
+    required int idSituacaoServico,
+  }) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/$idServico/situacao'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'id': idServico,
+          'situacaoServicoId': idSituacaoServico,
+        }),
+      );
+
+      return response.statusCode == 204; // NoContent indica sucesso
+    } catch (e) {
+      return false;
+    }
+  }
+
   static Future<Servico?> inserirServico({
     String? observacao,
     required int idfinalidade,

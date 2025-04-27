@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:routerapp/models/rota.dart';
+import 'package:routerapp/screens/DetalhesdaRota_screen.dart';
 import 'package:routerapp/screens/servico_screen.dart';
 import 'package:routerapp/services/rota_service.dart'; // Import da ServicoScreen
 // Importe seus services e outros models necessários
@@ -54,31 +55,46 @@ class RotaScreenState extends State<RotaScreen> {
                 itemCount: rotas.length,
                 itemBuilder: (context, index) {
                   final rota = rotas[index];
+
                   return Card(
                     margin: const EdgeInsets.all(8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Código: ${rota.codigo}',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => DetalhesDaRotaScreen(
+                                  rotaId: rota.id,
+                                ), // <- passa a rota selecionada
                           ),
-                          Text('ID: ${rota.id}'),
-                          Text(
-                            'Criação: ${dateFormat.format(rota.datacriacao)}',
-                          ),
-                          if (rota.datafechamento != null)
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Text(
-                              'Fechamento: ${dateFormat.format(rota.datafechamento!)}',
+                              'Código: ${rota.codigo}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          if (rota.observacao != null)
-                            Text('Observação: ${rota.observacao}'),
-                          Text('Ativo: ${rota.ativo == 1 ? 'Sim' : 'Não'}'),
-                          Text('Situação ID: ${rota.idsituacao}'),
-                          // Você pode adicionar mais detalhes da rota aqui
-                        ],
+                            Text('ID: ${rota.id}'),
+                            Text(
+                              'Criação: ${dateFormat.format(rota.datacriacao)}',
+                            ),
+                            if (rota.datafechamento != null)
+                              Text(
+                                'Fechamento: ${dateFormat.format(rota.datafechamento!)}',
+                              ),
+                            if (rota.observacao != null)
+                              Text('Observação: ${rota.observacao}'),
+                            Text('Ativo: ${rota.ativo == 1 ? 'Sim' : 'Não'}'),
+                            Text('Situação ID: ${rota.idsituacao}'),
+                          ],
+                        ),
                       ),
                     ),
                   );
