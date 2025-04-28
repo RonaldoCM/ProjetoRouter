@@ -2,7 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:routerapp/models/rota.dart';
 import 'package:routerapp/models/servico.dart';
+import 'package:routerapp/screens/servico_screen.dart';
+import 'package:routerapp/services/rota_service.dart';
 import 'package:routerapp/services/servico_service.dart'; // Importe o serviço de fetch
 
 class DetalhesDaRotaScreen extends StatefulWidget {
@@ -16,12 +19,32 @@ class DetalhesDaRotaScreen extends StatefulWidget {
 
 class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
   late Future<List<Servico>> _futureServicos;
+  Rota? _rota;
 
   @override
   void initState() {
     super.initState();
     // Carregar os serviços para a rota especificada
+    //_futureServicos = ServicoService.fetchServicosByRota(widget.rotaId);
+    _carregarDados();
+  }
+
+  Future<void> _carregarDados() async {
+    // Carregar os serviços para a rota especificada
     _futureServicos = ServicoService.fetchServicosByRota(widget.rotaId);
+    // Buscar os detalhes da rota
+    try {
+      final rota = await RotaService.fetchRotaById(widget.rotaId);
+      setState(() {
+        _rota = rota;
+      });
+    } catch (error) {
+      // Tratar o erro ao carregar a rota, se necessário
+      //print('Erro ao carregar detalhes da rota: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao carregar detalhes da rota.')),
+      );
+    }
   }
 
   // Mapa para traduzir o ID para a string de situação (para exibição)
@@ -36,7 +59,11 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
     return Scaffold(
-      appBar: AppBar(title: const Text('Detalhes da Rota')),
+      appBar: AppBar(
+        title: Text(
+          _rota == null ? 'Rota: Carregando...' : 'Rota: ${_rota!.codigo}',
+        ),
+      ),
       body: FutureBuilder<List<Servico>>(
         future: _futureServicos,
         builder: (context, snapshot) {
@@ -173,6 +200,29 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
             return const Center(child: Text('Nenhum serviço encontrado.'));
           }
         },
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          //CHAMAR A TELA DE INSERÇÃO DE SERVIÇO AQUI...
+
+          // Rota rota = await RotaService.fetchRotasById(widget.rotaId);
+
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ServicoScreen(rota: _rota!),
+            ),
+          ).then((_) {
+            // Este bloco .then será executado quando a ServicoScreen for desempilhada
+            setState(() {
+              _futureServicos = ServicoService.fetchServicosByRota(
+                widget.rotaId,
+              );
+            });
+          });
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

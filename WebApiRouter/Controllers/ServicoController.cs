@@ -47,7 +47,7 @@ namespace WebApiRouter.Controllers
             var servico = await _context.Servicos.FindAsync(id);
             if (servico == null)
                 return NotFound("Serviço não encontrado.");
-            
+
             servico.SituacaoServicoId = dto.SituacaoServicoId;
             servico.FinalidadeId = dto.FinalidadeId;
             servico.RotaId = dto.RotaId;
@@ -68,7 +68,7 @@ namespace WebApiRouter.Controllers
                 return NotFound("Serviço não encontrado.");
 
             servico.SituacaoServicoId = dto.SituacaoServicoId;
-            
+
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -100,6 +100,8 @@ namespace WebApiRouter.Controllers
         {
             return await _context.Servicos
                 .Where(s => s.Id == id)
+                .Include(s => s.Pessoajuridica)
+                .ThenInclude(pj => pj.IdenderecoNavigation)
                 .Select(s => new ServicoResponseDTO
                 {
                     Id = s.Id,
@@ -109,7 +111,16 @@ namespace WebApiRouter.Controllers
                     Finalidade = s.Finalidade.Descricao,
                     CodigoRota = s.Rota.Codigo,
                     NomePessoaJuridica = s.Pessoajuridica.Nome,
-                    Observacao = s.Observacao
+                    Observacao = s.Observacao,
+
+
+                    // Mapeamento das propriedades do Endereço
+                    Logradouro = s.Pessoajuridica.IdenderecoNavigation.Logradouro,
+                    Numero = s.Pessoajuridica.IdenderecoNavigation.Numero,
+                    Bairro = s.Pessoajuridica.IdenderecoNavigation.Bairro,
+                    Cidade = s.Pessoajuridica.IdenderecoNavigation.Cidade,
+                    Estado = s.Pessoajuridica.IdenderecoNavigation.Estado
+
                 })
                 .FirstOrDefaultAsync();
         }
@@ -142,7 +153,7 @@ namespace WebApiRouter.Controllers
                     Bairro = s.Pessoajuridica.IdenderecoNavigation.Bairro,
                     Cidade = s.Pessoajuridica.IdenderecoNavigation.Cidade,
                     Estado = s.Pessoajuridica.IdenderecoNavigation.Estado
-                })
+                }).OrderByDescending(x => x.Situacao == "Aberto").ThenBy(x => x.Id)
                 .ToListAsync();
 
             return Ok(servicos);

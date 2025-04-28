@@ -17,13 +17,13 @@ namespace WebApiRouter.Controllers
         {
             _context = context;
         }
-        
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Rota>>> GetRotas()
         {
-            return await _context.Rota.ToListAsync();
+            return await _context.Rota.OrderByDescending(x => x.SituacaoRotaId == 1).ThenByDescending(x => x.Datacriacao).ToListAsync();
         }
-        
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Rota>> GetRota(int id)
         {
@@ -36,7 +36,7 @@ namespace WebApiRouter.Controllers
 
             return rota;
         }
-        
+
         [HttpPut("{id}")]
         public async Task<ActionResult> PutRota(int id, Rota rota)
         {
@@ -75,10 +75,10 @@ namespace WebApiRouter.Controllers
             {
                 return NotFound();
             }
-            
+
             rota.Ativo = dto.Ativo;
             rota.Observacao = dto.Observacao;
-            
+
             if (dto.Ativo == 0 && rota.Datafechamento == null)
             {
                 rota.Datafechamento = DateTime.Now;

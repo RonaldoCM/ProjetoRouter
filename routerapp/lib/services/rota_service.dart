@@ -17,6 +17,18 @@ class RotaService {
     }
   }
 
+  static Future<Rota> fetchRotaById(int rotaId) async {
+    final url = '$baseUrl/$rotaId';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      return Rota.fromJson(jsonResponse); //usa Rota.fromJson diretamente
+    } else {
+      throw Exception('Falha ao carregar a Rota');
+    }
+  }
+
   static Future<Rota?> criarRota(String? observacao) async {
     try {
       final response = await http.post(
