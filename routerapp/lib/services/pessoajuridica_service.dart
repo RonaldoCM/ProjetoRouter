@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:routerapp/models/pessoafisica.dart';
 import 'package:routerapp/models/pessoajuridica.dart';
 
 class PessoaJuridicaService {
@@ -21,13 +22,22 @@ class PessoaJuridicaService {
     required String nome,
     required String cnpj,
     String? telefone,
-    required String logradouro,
-    required String numero,
-    required String bairro,
-    required String cidade,
-    required String estado,
+    required endereco,
+    required List<PessoaFisica> pessoasFisicas,
   }) async {
     try {
+      // Formatar a lista de PessoaFisica para o formato esperado pela API
+      List<Map<String, dynamic>> pessoaFisicaListJson =
+          pessoasFisicas
+              .map(
+                (pf) => {
+                  'Nome': pf.nome,
+                  'Cpf': pf.cpf,
+                  'Telefone': pf.telefone,
+                },
+              )
+              .toList();
+
       final response = await http.post(
         Uri.parse(baseUrl),
         headers: <String, String>{
@@ -38,12 +48,13 @@ class PessoaJuridicaService {
           'cnpj': cnpj,
           'telefone': telefone,
           'endereco': {
-            'logradouro': logradouro,
-            'numero': numero,
-            'bairro': bairro,
-            'cidade': cidade,
-            'estado': estado,
+            'logradouro': endereco.logradouro,
+            'numero': endereco.numero,
+            'bairro': endereco.bairro,
+            'cidade': endereco.cidade,
+            'estado': endereco.estado,
           },
+          'pessoafisica': pessoaFisicaListJson,
         }),
       );
 

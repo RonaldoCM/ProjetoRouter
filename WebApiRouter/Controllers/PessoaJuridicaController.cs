@@ -113,9 +113,48 @@ namespace WebApiRouter.Controllers
             _context.Pessoajuridicas.Add(novaPJ);
             await _context.SaveChangesAsync();
 
+
+            // Processar a lista de PessoaFisicaCreateDTO
+            if (pessoaJuridicaDTO.PessoaFisica != null && pessoaJuridicaDTO.PessoaFisica.Any())
+            {
+                foreach (var pfDTO in pessoaJuridicaDTO.PessoaFisica)
+                {
+                    var novaPF = new Pessoafisica
+                    {
+                        Nome = pfDTO.Nome,
+                        Cpf = pfDTO.Cpf,
+                        Telefone = pfDTO.Telefone,
+                        Ativo = 1,                        
+                        TipopessoaId = 1,
+                        Senha = null,
+                        Codigo = await GerarCodigoPessoaFisicaAsync()
+
+                    };
+                    _context.Pessoafisicas.Add(novaPF);
+                }
+                await _context.SaveChangesAsync();
+            }
+
+
+
+            //return CreatedAtAction("GetPessoaJuridica", new { id = novaPJ.Id }, new PessoaJuridicaResponseDTO { Id = novaPJ.Id, Nome = novaPJ.Nome, Cnpj = novaPJ.Cnpj });
+
+
             return CreatedAtAction("GetPessoaJuridica", new { id = novaPJ.Id }, novaPJ);
 
         }
+
+        private async Task<string> GerarCodigoPessoaFisicaAsync()
+        {
+            var ano = DateTime.UtcNow.Year;
+
+            var totalAno = await _context.Pessoafisicas
+                .Where(p => p.Codigo.StartsWith($"PF{ano}"))
+                .CountAsync();
+
+            return $"PF{ano}-{(totalAno + 1):D4}";
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePessoajuridica(int id)

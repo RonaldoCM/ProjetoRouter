@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:routerapp/models/pessoafisica.dart';
-import 'package:routerapp/services/pessoafisica_service.dart';
 
 class CadastroPessoaFisicaScreen extends StatefulWidget {
   const CadastroPessoaFisicaScreen({super.key});
