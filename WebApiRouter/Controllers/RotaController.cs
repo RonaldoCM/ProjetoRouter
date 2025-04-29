@@ -67,7 +67,7 @@ namespace WebApiRouter.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult> AtualizarRota(int id, [FromBody] RotaUpdateDTO dto)
+        public async Task<ActionResult> DesativarRota(int id, [FromBody] RotaUpdateDTO dto)
         {
             var rota = await _context.Rota.FindAsync(id);
 
@@ -100,6 +100,22 @@ namespace WebApiRouter.Controllers
                 }
             }
 
+            return NoContent();
+        }
+
+        [HttpPut("{id}/rota")]
+        public async Task<ActionResult> AtualizarSituacaoRota(int id, [FromBody] RotaUpdateDTO dto)
+        {
+            if (id != dto.Id)
+                return BadRequest("ID da Rota não confere com a URL.");
+
+            var rota = await _context.Rota.FindAsync(id);
+            if (rota == null)
+                return NotFound("Rota não encontrado.");
+
+            rota.SituacaoRotaId = dto.SituacaoRotaId;
+
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 

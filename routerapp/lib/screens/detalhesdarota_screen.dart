@@ -29,32 +29,6 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
     _carregarDados();
   }
 
-  Future<void> _carregarDados() async {
-    // Carregar os serviços para a rota especificada
-    _futureServicos = ServicoService.fetchServicosByRota(widget.rotaId);
-    // Buscar os detalhes da rota
-    try {
-      final rota = await RotaService.fetchRotaById(widget.rotaId);
-      setState(() {
-        _rota = rota;
-      });
-    } catch (error) {
-      // Tratar o erro ao carregar a rota, se necessário
-      //print('Erro ao carregar detalhes da rota: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erro ao carregar detalhes da rota.')),
-      );
-    }
-  }
-
-  // Mapa para traduzir o ID para a string de situação (para exibição)
-  final Map<int, String> _idParaSituacao = {
-    1: 'Aberto',
-    2: 'Fechado',
-    3: 'Cancelado',
-    4: 'Incompleto',
-  };
-
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
@@ -75,6 +49,12 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
             );
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             final servicos = snapshot.data!;
+
+            // Verifica se a rota deve ser fechada após carregar os serviços
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _verificarEFecharRota(servicos);
+            });
+
             return ListView.builder(
               itemCount: servicos.length,
 
@@ -227,6 +207,32 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
     );
   }
 
+  Future<void> _carregarDados() async {
+    // Carregar os serviços para a rota especificada
+    _futureServicos = ServicoService.fetchServicosByRota(widget.rotaId);
+    // Buscar os detalhes da rota
+    try {
+      final rota = await RotaService.fetchRotaById(widget.rotaId);
+      setState(() {
+        _rota = rota;
+      });
+    } catch (error) {
+      // Tratar o erro ao carregar a rota, se necessário
+      //print('Erro ao carregar detalhes da rota: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao carregar detalhes da rota.')),
+      );
+    }
+  }
+
+  // Mapa para traduzir o ID para a string de situação (para exibição)
+  final Map<int, String> _idParaSituacao = {
+    1: 'Aberto',
+    2: 'Fechado',
+    3: 'Cancelado',
+    4: 'Incompleto',
+  };
+
   Future<void> _atualizarSituacao(Servico servico, int novaSituacaoId) async {
     bool sucesso = await ServicoService.atualizarSituacaoServico(
       idServico: servico.id,
@@ -284,4 +290,82 @@ class DetalhesDaRotaScreenState extends State<DetalhesDaRotaScreen> {
       },
     );
   }
+
+  Future<void> _verificarEFecharRota(List<Servico> servicos) async {
+    if (_rota != null && servicos.isNotEmpty) {
+      final temServicosAbertos = servicos.any((s) => s.situacao == 'Aberto');
+      if (!temServicosAbertos && _rota!.idsituacao != 3) {
+        // Se não há serviços abertos e a rota não está fechada, fecha a rota
+        bool sucesso = await RotaService.atualizarSituacaoRota(
+          idRota: _rota!.id,
+          idSituacaoRota: 3, // Situação para "Fechado"
+        );
+        if (sucesso) {
+          // Busca novamente os detalhes da rota atualizados
+          try {
+            final rotaAtualizada = await RotaService.fetchRotaById(_rota!.id);
+            setState(() {
+              _rota =
+                  rotaAtualizada; // Atualiza o estado com a rota mais recente
+            });
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Rota "${_rota!.codigo}" fechada.')),
+              );
+            }
+          } catch (error) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Erro ao recarregar detalhes da rota.')),
+              );
+            }
+          }
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Erro ao fechar a rota "${_rota!.codigo}".'),
+              ),
+            );
+          }
+        }
+      }
+    }
+  }
+
+  /*
+  // Método para verificar se a rota deve ser fechada
+  Future<void> _verificarEFecharRota(List<Servico> servicos) async {
+    if (_rota != null && servicos.isNotEmpty) {
+      final temServicosAbertos = servicos.any((s) => s.situacao == 'Aberto');
+      if (!temServicosAbertos && _rota!.idsituacao != 3) {
+        // Se não há serviços abertos e a rota não está fechada, fecha a rota
+        bool sucesso = await RotaService.atualizarSituacaoRota(
+          idRota: _rota!.id,
+          idSituacaoRota:
+              3, // Situação para "Fechado" (você pode usar "Cancelado" se preferir)
+        );
+        if (sucesso) {
+          setState(() {
+            _rota!.idsituacao = 3;
+          });
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Rota "${_rota!.codigo}" fechada.')),
+            );
+          }
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Erro ao fechar a rota "${_rota!.codigo}".'),
+              ),
+            );
+          }
+        }
+      }
+    }
+  }
+
+*/
 }

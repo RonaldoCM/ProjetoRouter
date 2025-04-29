@@ -3,10 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:routerapp/models/rota.dart';
+import 'package:routerapp/models/servico.dart';
 import 'package:routerapp/screens/detalhesdarota_screen.dart';
 import 'package:routerapp/screens/servico_screen.dart';
-import 'package:routerapp/services/rota_service.dart'; // Import da ServicoScreen
-// Importe seus services e outros models necessários
+import 'package:routerapp/services/rota_service.dart';
+import 'package:routerapp/services/servico_service.dart';
 
 class RotaScreen extends StatefulWidget {
   const RotaScreen({super.key});
@@ -18,6 +19,7 @@ class RotaScreen extends StatefulWidget {
 class RotaScreenState extends State<RotaScreen> {
   // Suponha que você tenha uma lista de rotas carregada aqui
   Future<List<Rota>>? _futureRotas;
+  //Rota? _rota;
 
   @override
   void initState() {
@@ -25,12 +27,6 @@ class RotaScreenState extends State<RotaScreen> {
     // Carregue suas rotas aqui (se já não estiverem carregadas)
     //_futureRotas = RotaService.fetchRotas();
     _carregarRotas();
-  }
-
-  Future<void> _carregarRotas() async {
-    setState(() {
-      _futureRotas = RotaService.fetchRotas();
-    });
   }
 
   @override
@@ -70,7 +66,10 @@ class RotaScreenState extends State<RotaScreen> {
                                   rotaId: rota.id,
                                 ), // <- passa a rota selecionada
                           ),
-                        );
+                        ).then((_) {
+                          // Este bloco .then será executado quando a ServicoScreen for desempilhada
+                          _carregarRotas(); // Recarrega as rotas quando volta para esta tela
+                        });
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -93,8 +92,34 @@ class RotaScreenState extends State<RotaScreen> {
                               ),
                             if (rota.observacao != null)
                               Text('Observação: ${rota.observacao}'),
-                            Text('Ativo: ${rota.ativo == 1 ? 'Sim' : 'Não'}'),
-                            //Text('Situação ID: ${rota.idsituacao}'),
+                            Text(
+                              'Ativo: ${rota.idsituacao == 1 ? 'Sim' : 'Não'}',
+                            ),
+
+                            //      Column(
+                            //        crossAxisAlignment:
+                            //            CrossAxisAlignment
+                            //               .start, // Alinha os filhos à direita
+                            //        children: <Widget>[
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment
+                                      .start, // Alinha os elementos do Row à direita
+                              children: <Widget>[
+                                Switch(
+                                  value: rota.idsituacao == 1,
+                                  onChanged:
+                                      rota.idsituacao == 1
+                                          ? (value) {
+                                            _mostrarConfirmacaoCancelamento(
+                                              context,
+                                              rota,
+                                            );
+                                          }
+                                          : null, // Desabilita o switch se a rota não estiver ativa
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -139,6 +164,110 @@ class RotaScreenState extends State<RotaScreen> {
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  Future<void> _carregarRotas() async {
+    setState(() {
+      _futureRotas = RotaService.fetchRotas();
+    });
+  }
+
+  Future<void> _atualizarSituacaoRota(Rota rota, int novaSituacaoId) async {
+    bool sucesso = await RotaService.atualizarSituacaoRota(
+      idRota: rota.id,
+      idSituacaoRota: novaSituacaoId,
+    );
+
+    if (sucesso) {
+      _carregarRotas();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Rota "${rota.codigo}" atualizada.')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao atualizar a Rota "${rota.codigo}".')),
+      );
+    }
+  }
+
+  Future<void> _mostrarConfirmacaoCancelamento(
+    BuildContext context,
+    Rota rota,
+  ) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Confirmar Desativação',
+          ), // Mudando o título para refletir a ação
+          content: const Text(
+            'Você tem certeza que deseja desativar esta Rota e fechar todos os seus serviços?',
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Não'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o diálogo
+              },
+            ),
+            TextButton(
+              child: const Text('Sim'),
+              onPressed: () async {
+                // 1. Desativa a rota
+                await _atualizarSituacaoRota(rota, 3);
+
+                // 2. Busca todos os serviços da rota desativada
+                try {
+                  final List<Servico> servicosDaRota =
+                      await ServicoService.fetchServicosByRota(rota.id);
+
+                  // 3. Itera sobre os serviços e os fecha
+                  for (var servico in servicosDaRota) {
+                    await ServicoService.atualizarSituacaoServico(
+                      idServico: servico.id,
+                      idSituacaoServico: 3,
+                    );
+                    //  print(
+                    //     'Serviço ${servico.id} fechado.',
+                    //  ); // Para acompanhamento
+                  }
+
+                  // 4. Recarrega a lista de rotas para atualizar a UI
+                  _carregarRotas();
+
+                  // 5. Mostra uma mensagem de sucesso
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Rota "${rota.codigo}" desativada e seus serviços fechados.',
+                        ),
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  //    print('Erro ao fechar serviços da rota: $e');
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Erro ao desativar a rota ou fechar seus serviços.',
+                        ),
+                      ),
+                    );
+                  }
+                }
+
+                Navigator.of(context).pop(); // Fecha o diálogo
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

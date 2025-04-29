@@ -51,4 +51,28 @@ class RotaService {
       return null;
     }
   }
+
+  static Future<bool> atualizarSituacaoRota({
+    required int idRota,
+    required int idSituacaoRota,
+  }) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/$idRota/rota'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'id': idRota,
+          'situacaoRotaId': idSituacaoRota,
+          'observacao': null,
+          'ativo': 1,
+        }),
+      );
+
+      return response.statusCode == 204; // NoContent indica sucesso
+    } catch (e) {
+      return false;
+    }
+  }
 }
