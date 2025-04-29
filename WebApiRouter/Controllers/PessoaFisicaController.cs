@@ -72,8 +72,10 @@ namespace WebApiRouter.Controllers
             {
                 Nome = pessoaDTO.Nome,
                 Cpf = pessoaDTO.Cpf,
+                Telefone = pessoaDTO.Telefone,
                 Ativo = 1,
                 TipopessoaId = 1,
+                Senha = null,
                 Codigo = await GerarCodigoPessoaFisicaAsync()
             };
 

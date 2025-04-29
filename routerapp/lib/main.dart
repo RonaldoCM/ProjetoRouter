@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/rota_screen.dart';
+import 'package:routerapp/screens/cadastropessoajuridica_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'RouterApp',
       theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
-      home: RotaScreen(),
+      home: CadastroPessoaJuridicaScreen(),
     );
   }
 }

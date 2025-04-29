@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:routerapp/models/pessoafisica.dart';
 import 'package:routerapp/models/pessoajuridica.dart';
+import 'package:routerapp/screens/cadastropessoafisica_screen.dart';
 import 'package:routerapp/services/pessoajuridica_service.dart';
 
 class CadastroPessoaJuridicaScreen extends StatefulWidget {
@@ -24,6 +26,9 @@ class _CadastroPessoaJuridicaScreenState
   final TextEditingController _numeroController = TextEditingController();
   final TextEditingController _bairroController = TextEditingController();
   final TextEditingController _cidadeController = TextEditingController();
+
+  // Lista para armazenar as pessoas físicas associadas
+  final List<PessoaFisica> _pessoasFisicasAssociadas = [];
 
   String? _estadoSelecionado; // Variável para armazenar o estado selecionado
 
@@ -219,9 +224,65 @@ class _CadastroPessoaJuridicaScreenState
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () async {
-                  /*                if (!_formKey.currentState!.validate()) {
+                  //   if (!_formKey.currentState!.validate()) {
+                  //     return; // valida primeiro
+                  //   }
+
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CadastroPessoaFisicaScreen(),
+                    ),
+                  );
+
+                  // Se a tela de cadastro de pessoa física retornar um resultado (a pessoa física cadastrada)
+                  if (result is PessoaFisica) {
+                    setState(() {
+                      _pessoasFisicasAssociadas.add(result);
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          '${result.nome} adicionado como colaborador.',
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: const Text('Adicionar Colaborador'),
+              ),
+
+              const SizedBox(height: 16),
+              const Text(
+                'Colaboradores Associados',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              _pessoasFisicasAssociadas.isEmpty
+                  ? const Text('Nenhum colaborador adicionado.')
+                  : ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _pessoasFisicasAssociadas.length,
+                    itemBuilder: (context, index) {
+                      final colaborador = _pessoasFisicasAssociadas[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            colaborador.nome ?? 'Nome não disponível',
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () async {
+                  if (!_formKey.currentState!.validate()) {
                     return; // valida primeiro
-                  } */
+                  }
 
                   // Captura todos os valores antes do await:
                   final nome = _nomeController.text;

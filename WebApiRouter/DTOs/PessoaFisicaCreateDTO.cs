@@ -4,5 +4,6 @@
     {
         public string Nome { get; set; } = null!;
         public string? Cpf { get; set; }
+        public string? Telefone { get; set; }
     }
 }
