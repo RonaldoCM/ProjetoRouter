@@ -36,7 +36,7 @@ class Servico {
       datafechamento:
           json['datafechamento'] != null
               ? DateTime.parse(json['datafechamento'])
-              : null, // Converter String para DateTime se não for nulo
+              : null,
       situacao: json['situacao'],
       finalidade: json['finalidade'],
       codigoRota: json['codigoRota'],

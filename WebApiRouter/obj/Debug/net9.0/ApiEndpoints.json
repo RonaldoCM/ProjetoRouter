@@ -264,16 +264,22 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "WebApiRouter.Controllers.PessoaJuridicaController",
-    "Method": "GetPessoajuridicas",
-    "RelativePath": "api/PessoaJuridica",
+    "ContainingType": "WebApiRouter.Controllers.PessoaFisicaController",
+    "Method": "GetPessoasFisicasByPessoaJuridica",
+    "RelativePath": "api/PessoaFisica/{id}/pessoas-fisicas",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebApiRouter.Models.Pessoajuridica, WebApiRouter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebApiRouter.DTOs.PessoaFisicaResponseDTO, WebApiRouter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -297,9 +303,19 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApiRouter.Controllers.PessoaJuridicaController",
+    "Method": "GetPessoajuridicas",
+    "RelativePath": "api/PessoaJuridica",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "WebApiRouter.DTOs.PessoaJuridicaResponseDTO",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebApiRouter.DTOs.PessoaJuridicaResponseDTO, WebApiRouter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -445,7 +461,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebApiRouter.Models.Rota, WebApiRouter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[WebApiRouter.DTOs.RotaResponseDTO, WebApiRouter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -530,7 +546,7 @@
   },
   {
     "ContainingType": "WebApiRouter.Controllers.RotaController",
-    "Method": "AtualizarRota",
+    "Method": "DesativarRota",
     "RelativePath": "api/Rota/{id}",
     "HttpMethod": "PATCH",
     "IsController": true,
@@ -560,6 +576,27 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApiRouter.Controllers.RotaController",
+    "Method": "AtualizarSituacaoRota",
+    "RelativePath": "api/Rota/{id}/rota",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "WebApiRouter.DTOs.RotaUpdateDTO",
         "IsRequired": true
       }
     ],
@@ -653,6 +690,27 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "WebApiRouter.Controllers.ServicosController",
+    "Method": "AtualizarSituacaoServico",
+    "RelativePath": "api/Servicos/{id}/situacao",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "WebApiRouter.DTOs.ServicoUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "WebApiRouter.Controllers.ServicosController",

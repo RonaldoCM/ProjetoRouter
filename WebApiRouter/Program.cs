@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using WebApiRouter.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,18 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 // Adiciona serviços de controllers e Swagger
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
+//builder.Services.AddControllers().AddJsonOptions(options =>
+//{
+//    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+//    options.JsonSerializerOptions.WriteIndented = true; // opcional
+//});
+
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
 builder.Services.AddEndpointsApiExplorer(); // Necessário para Swagger
 builder.Services.AddSwaggerGen();           // Gera a documentação Swagger
 

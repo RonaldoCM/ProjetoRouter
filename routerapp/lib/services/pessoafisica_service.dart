@@ -16,6 +16,20 @@ class PessoaFisicaService {
     }
   }
 
+  static Future<List<PessoaFisica>> fetchPessoasFisicasAssociadas({
+    required idpessoajuridica,
+  }) async {
+    final url = '$baseUrl/$idpessoajuridica/pessoas-fisicas';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((r) => PessoaFisica.fromJson(r)).toList();
+    } else {
+      throw Exception('Falha ao carregar colaboradores');
+    }
+  }
+
   static Future<PessoaFisica?> inserirPessoaFisica({
     required String nome,
     required String cpf,

@@ -17,9 +17,8 @@ class ServicoService {
     }
   }
 
-  // Novo método para buscar serviços de uma rota
   static Future<List<Servico>> fetchServicosByRota(int rotaId) async {
-    final url = '$baseUrl/rota/$rotaId'; // Definimos a URL com a rotaId
+    final url = '$baseUrl/rota/$rotaId';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -30,7 +29,6 @@ class ServicoService {
     }
   }
 
-  // Novo método para atualizar a situação do serviço
   static Future<bool> atualizarSituacaoServico({
     required int idServico,
     required int idSituacaoServico,
@@ -47,7 +45,7 @@ class ServicoService {
         }),
       );
 
-      return response.statusCode == 204; // NoContent indica sucesso
+      return response.statusCode == 204;
     } catch (e) {
       return false;
     }
@@ -58,6 +56,7 @@ class ServicoService {
     required int idfinalidade,
     required int idrota,
     required int idpessoajuridica,
+    int? idPessoaFisica,
   }) async {
     try {
       final response = await http.post(
@@ -70,22 +69,16 @@ class ServicoService {
           'FinalidadeId': idfinalidade,
           'RotaId': idrota,
           'PessoajuridicaId': idpessoajuridica,
+          'idPessoaFisica': idPessoaFisica,
         }),
       );
-
-      // print('Status Code: ${response.statusCode}');
-      // print('Headers: ${response.headers}'); // <--- Verifique isso
-      // print('Body: ${response.body}');
 
       if (response.statusCode == 201) {
         return Servico.fromJson(jsonDecode(response.body));
       } else {
-        // print('Erro ao inserir Pessoa Jurídica: ${response.statusCode}');
-        // print('Corpo da resposta: ${response.body}');
         return null;
       }
     } catch (e) {
-      //print('Erro de conexão ao inserir Pessoa Jurídica: $e');
       return null;
     }
   }

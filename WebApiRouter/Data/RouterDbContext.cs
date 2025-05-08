@@ -18,9 +18,9 @@ public partial class RouterDbContext : DbContext
 
     public virtual DbSet<Finalidade> Finalidades { get; set; }
 
-    public virtual DbSet<Pessoafisica> Pessoafisicas { get; set; }
+    public virtual DbSet<Pessoafisica> Pessoasfisicas { get; set; }
 
-    public virtual DbSet<Pessoajuridica> Pessoajuridicas { get; set; }
+    public virtual DbSet<Pessoajuridica> Pessoasjuridicas { get; set; }
 
     public virtual DbSet<Rota> Rota { get; set; }
 
@@ -164,7 +164,7 @@ public partial class RouterDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_rta_pessoajuridica_rta_endereco1");
 
-            entity.HasMany(d => d.Pessoafisicas).WithMany(p => p.Pessoajuridicas)
+            entity.HasMany(d => d.Pessoasfisicas).WithMany(p => p.Pessoasjuridicas)
                 .UsingEntity<Dictionary<string, object>>(
                     "PessoajuridicaPessoafisica",
                     r => r.HasOne<Pessoafisica>().WithMany()
@@ -250,6 +250,7 @@ public partial class RouterDbContext : DbContext
                 .HasColumnName("DATAFECHAMENTO");
             entity.Property(e => e.FinalidadeId).HasColumnName("FINALIDADE_ID");
             entity.Property(e => e.PessoajuridicaId).HasColumnName("PESSOAJURIDICA_ID");
+            entity.Property(e => e.PessoafisicaId).HasColumnName("PESSOAFISICA_ID");
             entity.Property(e => e.RotaId).HasColumnName("ROTA_ID");
             entity.Property(e => e.SituacaoServicoId).HasColumnName("SITUACAO_SERVICO_ID");
             entity.Property(e => e.Observacao)

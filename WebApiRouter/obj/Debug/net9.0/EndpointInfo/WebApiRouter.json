@@ -48,6 +48,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnderecoCreateDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/EnderecoCreateDTO"
@@ -145,6 +150,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Endereco"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Endereco"
@@ -311,6 +321,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PessoaFisicaCreateDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PessoaFisicaCreateDTO"
@@ -408,6 +423,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pessoafisica"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Pessoafisica"
@@ -453,10 +473,21 @@
         }
       }
     },
-    "/api/PessoaJuridica": {
+    "/api/PessoaFisica/{id}/pessoas-fisicas": {
       "get": {
         "tags": [
-          "PessoaJuridica"
+          "PessoaFisica"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -466,7 +497,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Pessoajuridica"
+                    "$ref": "#/components/schemas/PessoaFisicaResponseDTO"
                   }
                 }
               },
@@ -474,7 +505,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Pessoajuridica"
+                    "$ref": "#/components/schemas/PessoaFisicaResponseDTO"
                   }
                 }
               },
@@ -482,20 +513,27 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Pessoajuridica"
+                    "$ref": "#/components/schemas/PessoaFisicaResponseDTO"
                   }
                 }
               }
             }
           }
         }
-      },
+      }
+    },
+    "/api/PessoaJuridica": {
       "post": {
         "tags": [
           "PessoaJuridica"
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PessoaJuridicaCreateDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PessoaJuridicaCreateDTO"
@@ -515,21 +553,40 @@
         },
         "responses": {
           "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "PessoaJuridica"
+        ],
+        "responses": {
+          "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PessoaJuridicaResponseDTO"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PessoaJuridicaResponseDTO"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PessoaJuridicaResponseDTO"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PessoaJuridicaResponseDTO"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PessoaJuridicaResponseDTO"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PessoaJuridicaResponseDTO"
+                  }
                 }
               }
             }
@@ -593,6 +650,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pessoajuridica"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Pessoajuridica"
@@ -645,6 +707,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PessoaJuridicaVinculoMultiplosDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PessoaJuridicaVinculoMultiplosDTO"
@@ -763,7 +830,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Rota"
+                    "$ref": "#/components/schemas/RotaResponseDTO"
                   }
                 }
               },
@@ -771,7 +838,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Rota"
+                    "$ref": "#/components/schemas/RotaResponseDTO"
                   }
                 }
               },
@@ -779,7 +846,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Rota"
+                    "$ref": "#/components/schemas/RotaResponseDTO"
                   }
                 }
               }
@@ -793,6 +860,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotaCreateDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RotaCreateDTO"
@@ -890,6 +962,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Rota"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Rota"
@@ -930,6 +1007,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotaUpdateDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RotaUpdateDTO"
@@ -975,6 +1057,53 @@
         }
       }
     },
+    "/api/Rota/{id}/rota": {
+      "put": {
+        "tags": [
+          "Rota"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotaUpdateDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotaUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotaUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotaUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Servicos": {
       "post": {
         "tags": [
@@ -982,6 +1111,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServicoCreateDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ServicoCreateDTO"
@@ -1041,6 +1175,11 @@
         ],
         "requestBody": {
           "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServicoUpdateDTO"
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ServicoUpdateDTO"
@@ -1120,6 +1259,53 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/Servicos/{id}/situacao": {
+      "put": {
+        "tags": [
+          "Servicos"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServicoUpdateDTO"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServicoUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServicoUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServicoUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -1470,6 +1656,32 @@
         },
         "additionalProperties": false
       },
+      "EnderecoResponseDTO": {
+        "type": "object",
+        "properties": {
+          "logradouro": {
+            "type": "string",
+            "nullable": true
+          },
+          "numero": {
+            "type": "string",
+            "nullable": true
+          },
+          "bairro": {
+            "type": "string",
+            "nullable": true
+          },
+          "cidade": {
+            "type": "string",
+            "nullable": true
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Finalidade": {
         "type": "object",
         "properties": {
@@ -1501,6 +1713,33 @@
           "cpf": {
             "type": "string",
             "nullable": true
+          },
+          "telefone": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PessoaFisicaResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpf": {
+            "type": "string",
+            "nullable": true
+          },
+          "telefone": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1521,7 +1760,14 @@
             "nullable": true
           },
           "endereco": {
-            "$ref": "#/components/schemas/EnderecoCreateDTO"
+            "$ref": "#/components/schemas/EnderecoResponseDTO"
+          },
+          "pessoaFisica": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PessoaFisicaCreateDTO"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1549,8 +1795,19 @@
             "type": "string",
             "nullable": true
           },
+          "ativo": {
+            "type": "integer",
+            "format": "int32"
+          },
           "endereco": {
-            "$ref": "#/components/schemas/EnderecoCreateDTO"
+            "$ref": "#/components/schemas/EnderecoResponseDTO"
+          },
+          "pessoaFisica": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PessoaFisicaResponseDTO"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1611,7 +1868,7 @@
           "tipopessoa": {
             "$ref": "#/components/schemas/Tipopessoa"
           },
-          "pessoajuridicas": {
+          "pessoasjuridicas": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Pessoajuridica"
@@ -1662,7 +1919,7 @@
             },
             "nullable": true
           },
-          "pessoafisicas": {
+          "pessoasfisicas": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Pessoafisica"
@@ -1727,9 +1984,52 @@
         },
         "additionalProperties": false
       },
+      "RotaResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "codigo": {
+            "type": "string",
+            "nullable": true
+          },
+          "datacriacao": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "datafechamento": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "observacao": {
+            "type": "string",
+            "nullable": true
+          },
+          "ativo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "situacaoRotaId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "RotaUpdateDTO": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "situacaoRotaId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "observacao": {
             "type": "string",
             "nullable": true
@@ -1774,6 +2074,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "pessoafisicaId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "observacao": {
             "type": "string",
             "nullable": true
@@ -1809,6 +2113,10 @@
             "format": "int32"
           },
           "pessoajuridicaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pessoafisicaId": {
             "type": "integer",
             "format": "int32"
           }
@@ -1851,6 +2159,26 @@
           "observacao": {
             "type": "string",
             "nullable": true
+          },
+          "logradouro": {
+            "type": "string",
+            "nullable": true
+          },
+          "numero": {
+            "type": "string",
+            "nullable": true
+          },
+          "bairro": {
+            "type": "string",
+            "nullable": true
+          },
+          "cidade": {
+            "type": "string",
+            "nullable": true
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1871,6 +2199,10 @@
             "format": "int32"
           },
           "pessoajuridicaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pessoafisicaId": {
             "type": "integer",
             "format": "int32"
           },

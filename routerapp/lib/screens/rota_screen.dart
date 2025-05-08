@@ -17,15 +17,11 @@ class RotaScreen extends StatefulWidget {
 }
 
 class RotaScreenState extends State<RotaScreen> {
-  // Suponha que você tenha uma lista de rotas carregada aqui
   Future<List<Rota>>? _futureRotas;
-  //Rota? _rota;
 
   @override
   void initState() {
     super.initState();
-    // Carregue suas rotas aqui (se já não estiverem carregadas)
-    //_futureRotas = RotaService.fetchRotas();
     _carregarRotas();
   }
 
@@ -39,7 +35,7 @@ class RotaScreenState extends State<RotaScreen> {
         // RefreshIndicator permite que o usuário atualize a lista de rotas manualmente com um gesto de "puxar para baixo".
         onRefresh: _carregarRotas,
         child: FutureBuilder<List<Rota>>(
-          future: _futureRotas, // Use seu Future<List<Rota>> aqui
+          future: _futureRotas,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -231,9 +227,6 @@ class RotaScreenState extends State<RotaScreen> {
                       idServico: servico.id,
                       idSituacaoServico: 3,
                     );
-                    //  print(
-                    //     'Serviço ${servico.id} fechado.',
-                    //  ); // Para acompanhamento
                   }
 
                   // 4. Recarrega a lista de rotas para atualizar a UI
@@ -250,7 +243,6 @@ class RotaScreenState extends State<RotaScreen> {
                     );
                   }
                 } catch (e) {
-                  //    print('Erro ao fechar serviços da rota: $e');
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -262,7 +254,7 @@ class RotaScreenState extends State<RotaScreen> {
                   }
                 }
 
-                Navigator.of(context).pop(); // Fecha o diálogo
+                Navigator.of(context).pop();
               },
             ),
           ],

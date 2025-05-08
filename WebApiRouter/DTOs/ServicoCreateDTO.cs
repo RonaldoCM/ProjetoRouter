@@ -6,5 +6,6 @@
         public int FinalidadeId { get; set; }
         public int RotaId { get; set; }
         public int PessoajuridicaId { get; set; }
+        public int PessoafisicaId { get; set; }
     }
 }

@@ -11,13 +11,15 @@ namespace WebApiRouter.DTOs
 
         public string Cnpj { get; set; } = null!;
 
-        public string Telefone { get; set; } = null!;
+        public string? Telefone { get; set; } = null!;
 
         public string Codigo { get; set; } = null!;
 
-        public EnderecoCreateDTO Endereco { get; set; } = null!;
+        public sbyte Ativo { get; set; }
 
-        public List<Pessoafisica> PessoaFisica { get; set; } = null!;
+        public EnderecoResponseDTO Endereco { get; set; } = null!;
+
+        public List<PessoaFisicaResponseDTO> PessoaFisica { get; set; } = null!;
 
     }
 }

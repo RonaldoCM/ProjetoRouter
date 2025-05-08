@@ -91,6 +91,7 @@ class _CadastroPessoaFisicaScreenState
                   }
 
                   // Captura todos os valores antes do await:
+                  final id = null;
                   final nome = _nomeController.text;
                   final cpf = _cpfController.text;
                   final telefone =
@@ -99,11 +100,10 @@ class _CadastroPessoaFisicaScreenState
                           : null;
 
                   final novaPessoaFisica = PessoaFisica(
+                    id: id,
                     nome: nome,
                     cpf: cpf,
                     telefone: telefone,
-
-                    // Outros campos de PessoaFisica, se houver
                   );
 
                   // Retorna o objeto PessoaFisica para a tela anterior

@@ -20,13 +20,13 @@ namespace WebApiRouter.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Pessoafisica>>> GetPessoafisicas()
         {
-            return await _context.Pessoafisicas.ToListAsync();
+            return await _context.Pessoasfisicas.ToListAsync();
         }
         
         [HttpGet("{id}")]
         public async Task<ActionResult<Pessoafisica>> GetPessoafisica(int id)
         {
-            var pessoa = await _context.Pessoafisicas.FindAsync(id);
+            var pessoa = await _context.Pessoasfisicas.FindAsync(id);
 
             if (pessoa == null)
             {
@@ -35,7 +35,24 @@ namespace WebApiRouter.Controllers
 
             return pessoa;
         }
-        
+
+        [HttpGet("{id}/pessoas-fisicas")]
+        public async Task<ActionResult<IEnumerable<PessoaFisicaResponseDTO>>> GetPessoasFisicasByPessoaJuridica(int id)
+        {
+            var pessoaJuridica = await _context.Pessoasjuridicas
+                .Include(pj => pj.Pessoasfisicas)
+                .FirstOrDefaultAsync(pj => pj.Id == id);
+
+            if (pessoaJuridica == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(pessoaJuridica.Pessoasfisicas);
+        }
+
+
+
         [HttpPut("{id}")]
         public async Task<ActionResult> PutPessoafisica(int id, Pessoafisica pessoa)
         {
@@ -79,7 +96,7 @@ namespace WebApiRouter.Controllers
                 Codigo = await GerarCodigoPessoaFisicaAsync()
             };
 
-            _context.Pessoafisicas.Add(novaPF);
+            _context.Pessoasfisicas.Add(novaPF);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPessoaFisica", new { id = novaPF.Id }, novaPF);
@@ -89,7 +106,7 @@ namespace WebApiRouter.Controllers
         {
             var ano = DateTime.UtcNow.Year;
 
-            var totalAno = await _context.Pessoafisicas
+            var totalAno = await _context.Pessoasfisicas
                 .Where(p => p.Codigo.StartsWith($"PF{ano}"))
                 .CountAsync();
 
@@ -99,13 +116,13 @@ namespace WebApiRouter.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePessoafisica(int id)
         {
-            var pessoa = await _context.Pessoafisicas.FindAsync(id);
+            var pessoa = await _context.Pessoasfisicas.FindAsync(id);
             if (pessoa == null)
             {
                 return NotFound();
             }
 
-            _context.Pessoafisicas.Remove(pessoa);
+            _context.Pessoasfisicas.Remove(pessoa);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -113,7 +130,7 @@ namespace WebApiRouter.Controllers
 
         private bool PessoafisicaExists(int id)
         {
-            return _context.Pessoafisicas.Any(e => e.Id == id);
+            return _context.Pessoasfisicas.Any(e => e.Id == id);
         }
     }
 }

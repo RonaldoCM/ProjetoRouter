@@ -8,7 +8,6 @@ import 'package:routerapp/models/pessoajuridica.dart';
 import 'package:routerapp/screens/cadastropessoafisica_screen.dart';
 import 'package:routerapp/screens/endereco.screen.dart';
 import 'package:routerapp/services/pessoajuridica_service.dart';
-//import 'package:routerapp/screens/endereco_screen.dart';
 
 class CadastroPessoaJuridicaScreen extends StatefulWidget {
   const CadastroPessoaJuridicaScreen({super.key});
@@ -25,10 +24,8 @@ class _CadastroPessoaJuridicaScreenState
   final TextEditingController _cnpjController = TextEditingController();
   final TextEditingController _telefoneController = TextEditingController();
 
-  // Lista para armazenar as pessoas físicas associadas
   final List<PessoaFisica> _pessoasFisicasAssociadas = [];
 
-  // Objeto para armazenar o endereço
   Endereco? _endereco;
 
   final _cnpjFormatter = MaskTextInputFormatter(
@@ -210,14 +207,12 @@ class _CadastroPessoaJuridicaScreenState
                           ? _telefoneController.text
                           : null;
 
-                  // final estado = _estadoSelecionado!;
-
                   PessoaJuridica? novaPessoaJuridica =
                       await PessoaJuridicaService.inserirPessoaJuridica(
                         nome: nome,
                         cnpj: cnpj,
                         telefone: telefone,
-                        endereco: _endereco, // Passa o objeto _endereco
+                        endereco: _endereco,
                         pessoasFisicas: _pessoasFisicasAssociadas,
                       );
 

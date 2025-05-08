@@ -20,5 +20,5 @@ public partial class Pessoajuridica
 
     public virtual ICollection<Servico> Servicos { get; set; } = new List<Servico>();
 
-    public virtual ICollection<Pessoafisica> Pessoafisicas { get; set; } = new List<Pessoafisica>();
+    public virtual ICollection<Pessoafisica> Pessoasfisicas { get; set; } = new List<Pessoafisica>();
 }

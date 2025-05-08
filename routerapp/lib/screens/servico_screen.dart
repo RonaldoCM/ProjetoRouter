@@ -3,15 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:routerapp/models/finalidadeservico.dart';
+import 'package:routerapp/models/pessoafisica.dart';
 import 'package:routerapp/models/pessoajuridica.dart';
 import 'package:routerapp/models/rota.dart';
 import 'package:routerapp/models/servico.dart';
-//import 'package:routerapp/models/situacaoservico.dart';
 import 'package:routerapp/screens/cadastropessoajuridica_screen.dart';
 import 'package:routerapp/services/finalidadeservico_service.dart';
+import 'package:routerapp/services/pessoafisica_service.dart';
 import 'package:routerapp/services/pessoajuridica_service.dart';
 import 'package:routerapp/services/servico_service.dart';
-//import 'package:routerapp/services/situacaoservico_service.dart';
 
 class ServicoScreen extends StatefulWidget {
   final Rota rota;
@@ -23,21 +23,22 @@ class ServicoScreen extends StatefulWidget {
 }
 
 class ServicoScreenState extends State<ServicoScreen> {
-  late Future<List<PessoaJuridica>> _futurePessoasJuridicas; // Usando late
-  late Future<List<FinalidadeServico>> _futureFinalidades; // Usando late
-  String? _observacaoServico; // Para armazenar a observação
-  //late Future<List<SituacaoServico>> _futureSituacoesServico; // Usando late
+  late Future<List<PessoaJuridica>> _futurePessoasJuridicas;
+  late Future<List<FinalidadeServico>> _futureFinalidades;
+  String? _observacaoServico;
 
   PessoaJuridica? _pessoaJuridicaSelecionada;
+  PessoaFisica? _pessoaFisicaSelecionada;
   FinalidadeServico? _finalidadeSelecionada;
-  //SituacaoServico? _situacaoServicoSelecionada;
+
+  List<PessoaFisica> _pessoasFisicasAssociadas = [];
+  bool _isLoadingPF = false;
 
   @override
   void initState() {
     super.initState();
     _futurePessoasJuridicas = PessoaJuridicaService.fetchPessoaJuridica();
     _futureFinalidades = FinalidadeServicoService.fetchFinalidadeServico();
-    //_futureSituacoesServico = SituacaoServicoService.fetchSituacaoServico();
   }
 
   @override
@@ -59,11 +60,7 @@ class ServicoScreenState extends State<ServicoScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Rota: ${widget.rota.codigo}',
-              //style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            //SizedBox(height: 8),
+            Text('Rota: ${widget.rota.codigo}'),
             Text('Criação: ${dateFormat.format(widget.rota.datacriacao)}'),
             if (widget.rota.datafechamento != null)
               Text(
@@ -73,21 +70,19 @@ class ServicoScreenState extends State<ServicoScreen> {
               Text('Observação: ${widget.rota.observacao}'),
             Text('Ativo: ${widget.rota.ativo == 1 ? 'Sim' : 'Não'}'),
             Text('Situação Rota: Criada'),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               'Novo Serviço',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-
-            SizedBox(height: 16),
-            Text('Situação do Serviço: Aberto'),
-
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
+            const Text('Situação do Serviço: Aberto'),
+            const SizedBox(height: 16),
             FutureBuilder<List<PessoaJuridica>>(
               future: _futurePessoasJuridicas,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text(
                     'Erro ao carregar Pessoas Jurídicas: ${snapshot.error}',
@@ -98,8 +93,8 @@ class ServicoScreenState extends State<ServicoScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Nenhuma Pessoa Jurídica cadastrada.'),
-                        SizedBox(height: 8),
+                        const Text('Nenhuma Pessoa Jurídica cadastrada.'),
+                        const SizedBox(height: 8),
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -125,9 +120,8 @@ class ServicoScreenState extends State<ServicoScreen> {
                   } else {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-
                       children: [
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -151,7 +145,7 @@ class ServicoScreenState extends State<ServicoScreen> {
                         const SizedBox(height: 16),
                         DropdownButtonFormField<PessoaJuridica>(
                           decoration: const InputDecoration(
-                            labelText: 'Pessoa Jurídica',
+                            labelText: 'Cliente',
                             border: OutlineInputBorder(),
                           ),
                           value: _pessoaJuridicaSelecionada,
@@ -162,10 +156,89 @@ class ServicoScreenState extends State<ServicoScreen> {
                                   child: Text(pj.nome),
                                 );
                               }).toList(),
-                          onChanged: (PessoaJuridica? newValue) {
-                            setState(() {
-                              _pessoaJuridicaSelecionada = newValue;
-                            });
+                          onChanged: (PessoaJuridica? newValue) async {
+                            if (newValue != null) {
+                              setState(() {
+                                _pessoaJuridicaSelecionada = newValue;
+                                _pessoasFisicasAssociadas =
+                                    []; // Limpa a lista anterior
+                                _pessoaFisicaSelecionada =
+                                    null; // Reseta o dropdown de PF
+                                _isLoadingPF =
+                                    true; // Inicia o carregamento das PFs
+                              });
+                              try {
+                                final pessoas =
+                                    await PessoaFisicaService.fetchPessoasFisicasAssociadas(
+                                      idpessoajuridica: newValue.id,
+                                    );
+                                setState(() {
+                                  _pessoasFisicasAssociadas = pessoas;
+                                  _isLoadingPF =
+                                      false; // Finaliza o carregamento das PFs
+                                });
+                              } catch (e) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Erro: $e')),
+                                  );
+                                }
+                                setState(() {
+                                  _isLoadingPF =
+                                      false; // Garante que o loading seja desativado em caso de erro
+                                });
+                              }
+                            }
+                          },
+                          validator:
+                              (value) =>
+                                  value == null ? 'Selecione uma PJ' : null,
+                        ),
+                        const SizedBox(height: 16),
+                        // Dropdown de Pessoa Física
+                        DropdownButtonFormField<PessoaFisica>(
+                          decoration: InputDecoration(
+                            labelText: 'Responsável',
+                            border: const OutlineInputBorder(),
+                            // Exibe um indicador de carregamento dentro do InputDecoration
+                            suffixIcon:
+                                _isLoadingPF
+                                    ? const CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.blue,
+                                      ), // Cor do indicador
+                                      strokeWidth:
+                                          2.0, // Espessura da linha do indicador
+                                    )
+                                    : null, // Não exibe nada se não estiver carregando
+                          ),
+                          value: _pessoaFisicaSelecionada,
+                          items:
+                              _pessoasFisicasAssociadas.map((PessoaFisica pf) {
+                                return DropdownMenuItem<PessoaFisica>(
+                                  value: pf,
+                                  child: Text(pf.nome),
+                                );
+                              }).toList(),
+                          onChanged:
+                              _isLoadingPF || _pessoasFisicasAssociadas.isEmpty
+                                  ? null
+                                  : (PessoaFisica? newValue) {
+                                    setState(() {
+                                      _pessoaFisicaSelecionada = newValue;
+                                    });
+                                  },
+                          hint: Text(
+                            _pessoasFisicasAssociadas.isNotEmpty
+                                ? 'Selecione um responsável'
+                                : 'Nenhum responsável associado',
+                          ),
+                          validator: (value) {
+                            if (_pessoasFisicasAssociadas.isNotEmpty &&
+                                value == null) {
+                              return 'Selecione um responsável';
+                            }
+                            return null;
                           },
                         ),
                       ],
@@ -206,21 +279,20 @@ class ServicoScreenState extends State<ServicoScreen> {
                         _finalidadeSelecionada = newValue;
                       });
                     },
+                    validator:
+                        (value) =>
+                            value == null ? 'Selecione a finalidade' : null,
                   );
                 } else {
                   return const Text('Erro ao carregar informações.');
                 }
               },
             ),
-
             const SizedBox(height: 24),
-
             ElevatedButton(
               onPressed: () async {
                 final observacao = await _mostrarDialogObservacao(context);
-
                 if (observacao != null) {
-                  // Só atualiza se usuário clicou em "Salvar"
                   setState(() {
                     _observacaoServico = observacao;
                   });
@@ -228,7 +300,6 @@ class ServicoScreenState extends State<ServicoScreen> {
               },
               child: const Text('Adicionar Observação'),
             ),
-
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -243,6 +314,7 @@ class ServicoScreenState extends State<ServicoScreen> {
                             idfinalidade: _finalidadeSelecionada!.id,
                             idrota: widget.rota.id,
                             idpessoajuridica: _pessoaJuridicaSelecionada!.id,
+                            idPessoaFisica: _pessoaFisicaSelecionada?.id,
                           );
 
                       if (novoServico != null && mounted) {
@@ -251,7 +323,6 @@ class ServicoScreenState extends State<ServicoScreen> {
                             content: Text('Serviço cadastrado com sucesso!'),
                           ),
                         );
-
                         _resetarCampos();
                       } else if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -283,15 +354,17 @@ class ServicoScreenState extends State<ServicoScreen> {
   void _resetarCampos() {
     setState(() {
       _pessoaJuridicaSelecionada = null;
+      _pessoaFisicaSelecionada = null;
       _finalidadeSelecionada = null;
       _observacaoServico = null;
+      _pessoasFisicasAssociadas = [];
     });
   }
 
   Future<String?> _mostrarDialogObservacao(BuildContext context) async {
     String? observacao;
 
-    final FocusNode focusNode = FocusNode(); // <-- aqui
+    final FocusNode focusNode = FocusNode();
 
     await showDialog<String>(
       context: context,
@@ -301,7 +374,6 @@ class ServicoScreenState extends State<ServicoScreen> {
           text: _observacaoServico,
         );
 
-        // Logo depois que o diálogo for construído, dá foco
         WidgetsBinding.instance.addPostFrameCallback((_) {
           focusNode.requestFocus();
         });
@@ -309,8 +381,7 @@ class ServicoScreenState extends State<ServicoScreen> {
         return AlertDialog(
           title: const Text('Adicionar Observação'),
           content: TextFormField(
-            focusNode: focusNode, // <-- conecta aqui
-
+            focusNode: focusNode,
             controller: observacaoController,
             maxLength: 255,
             maxLines: null,
@@ -336,7 +407,7 @@ class ServicoScreenState extends State<ServicoScreen> {
       },
     );
 
-    focusNode.dispose(); // não esqueça de liberar depois!
+    focusNode.dispose();
     return observacao;
   }
 }

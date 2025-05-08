@@ -46,3 +46,7 @@ G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\obj\Debug\net9.0\WebApiRouter.pd
 G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\obj\Debug\net9.0\WebApiRouter.genruntimeconfig.cache
 G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\obj\Debug\net9.0\ref\WebApiRouter.dll
 G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
+G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\bin\Debug\net9.0\Microsoft.AspNetCore.JsonPatch.dll
+G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\bin\Debug\net9.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\bin\Debug\net9.0\Newtonsoft.Json.dll
+G:\MyFiles\Documents\ProjetoRouter\WebApiRouter\bin\Debug\net9.0\Newtonsoft.Json.Bson.dll

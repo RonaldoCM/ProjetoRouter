@@ -19,9 +19,23 @@ namespace WebApiRouter.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rota>>> GetRotas()
+        public async Task<IEnumerable<RotaResponseDTO>> GetRotas()
         {
-            return await _context.Rota.OrderByDescending(x => x.SituacaoRotaId == 1).ThenByDescending(x => x.Datacriacao).ToListAsync();
+            var rotas = await _context.Rota
+                           .OrderByDescending(x => x.SituacaoRotaId == 1)
+                           .ThenByDescending(x => x.Datacriacao)
+                           .ToListAsync();
+
+            return rotas.Select(r => new RotaResponseDTO
+            {
+                Id = r.Id,
+                Codigo = r.Codigo,
+                Datacriacao = r.Datacriacao,
+                Datafechamento = r.Datafechamento,
+                Observacao = r.Observacao,
+                Ativo = r.Ativo,
+                SituacaoRotaId = r.SituacaoRotaId
+            });
         }
 
         [HttpGet("{id}")]

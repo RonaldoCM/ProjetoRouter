@@ -1,27 +1,16 @@
 class PessoaFisica {
-  // final int id;
-  // final String codigo;
+  final int? id;
   final String nome;
   final String cpf;
-  // final int ativo;
   final String? telefone;
 
-  PessoaFisica({
-    // required this.id,
-    //  required this.codigo,
-    required this.nome,
-    required this.cpf,
-    // required this.ativo,
-    this.telefone,
-  });
+  PessoaFisica({this.id, required this.nome, required this.cpf, this.telefone});
 
   factory PessoaFisica.fromJson(Map<String, dynamic> json) {
     return PessoaFisica(
-      //  id: json['id'],
-      //   codigo: json['codigo'],
+      id: json['id'],
       nome: json['nome'],
       cpf: json['cpf'],
-      //   ativo: json['ativo'],
       telefone: json['telefone'],
     );
   }

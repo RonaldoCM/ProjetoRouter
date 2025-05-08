@@ -29,6 +29,7 @@ namespace WebApiRouter.Controllers
                 FinalidadeId = dto.FinalidadeId,
                 RotaId = dto.RotaId,
                 PessoajuridicaId = dto.PessoajuridicaId,
+                PessoafisicaId = dto.PessoafisicaId,
                 Observacao = dto.Observacao
             };
 
