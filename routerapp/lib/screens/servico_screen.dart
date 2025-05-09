@@ -60,21 +60,33 @@ class ServicoScreenState extends State<ServicoScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Rota: ${widget.rota.codigo}'),
-            Text('Criação: ${dateFormat.format(widget.rota.datacriacao)}'),
-            if (widget.rota.datafechamento != null)
-              Text(
-                'Fechamento: ${dateFormat.format(widget.rota.datafechamento!)}',
+            SizedBox(
+              width: double.infinity,
+              child: Card(
+                margin: const EdgeInsets.all(16.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Rota: ${widget.rota.codigo}'),
+                      Text(
+                        'Criação: ${dateFormat.format(widget.rota.datacriacao)}',
+                      ),
+                      if (widget.rota.datafechamento != null)
+                        Text(
+                          'Fechamento: ${dateFormat.format(widget.rota.datafechamento!)}',
+                        ),
+                      if (widget.rota.observacao != null)
+                        Text('Observação: ${widget.rota.observacao}'),
+                      Text('Ativo: ${widget.rota.ativo == 1 ? 'Sim' : 'Não'}'),
+                      Text('Situação Rota: Criada'),
+                    ],
+                  ),
+                ),
               ),
-            if (widget.rota.observacao != null)
-              Text('Observação: ${widget.rota.observacao}'),
-            Text('Ativo: ${widget.rota.ativo == 1 ? 'Sim' : 'Não'}'),
-            Text('Situação Rota: Criada'),
-            const SizedBox(height: 24),
-            const Text(
-              'Novo Serviço',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
+
             const SizedBox(height: 16),
             const Text('Situação do Serviço: Aberto'),
             const SizedBox(height: 16),
